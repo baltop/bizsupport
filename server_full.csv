@@ -1,0 +1,14 @@
+사이트코드,기관명,start_URL,API_yn
+btp,부산테크노파크,https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013,N
+itp,인천테크노파크,https://itp.or.kr/intro.asp?tmid=13,N
+ttp,한국테크노파크진흥회,http://www.technopark.kr/businessboard,N
+gbtp,경북테크노파크 - 사업공고,https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021,N
+kyung1,(재)경기테크노파크,https://pms.gtp.or.kr/web/business/webBusinessList.do,
+seoul1,(재)서울테크노파크,https://www.seoultp.or.kr/user/nd19746.do,
+sejong,(재)세종테크노파크,https://sjtp.or.kr/bbs/board.php?bo_table=business01,
+kita,한국무역협회,https://www.kita.net/asocBiz/asocBiz/asocBizOngoingList.do,N
+busanit,부산정보산업진흥원,http://www.busanit.or.kr/board/list.asp?bcode=notice,N
+jbba,전북특별자치도경제통상진흥원,https://www.jbba.kr/bbs/board.php?bo_table=sub01_09,N
+snipBottom,성남산업진흥원,https://www.snip.or.kr/SNIP/contents/Business1.do,Y
+jbtp,전북테크노파크,https://www.jbtp.or.kr/board/list.jbtp?boardId=BBS_0000006&menuCd=DOM_000000102001000000&contentsSid=9&cpath=,N
+dip,대구디지털혁신진흥원,https://www.dip.or.kr/home/notice/businessbbs/boardList.ubs?fboardcd=business,N

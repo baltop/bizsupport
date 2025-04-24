@@ -1,0 +1,15 @@
+첨부파일 다운로드 링크:
+
+1. 붙임1_모집공고(안).hwp (22KB)
+   URL: https://itp.or.kr/common/COM_FILEDOWN.ASP?a=bbs&b=2504211353570985393701.hwp
+
+2. 붙임2_영세디자인기업지원사업_관련서식(2025).hwp (111KB)
+   URL: https://itp.or.kr/common/COM_FILEDOWN.ASP?a=bbs&b=2504211353570902534126.hwp
+
+3. 붙임3_모집공고포스터.jpg (3112KB)
+   URL: https://itp.or.kr/common/COM_FILEDOWN.ASP?a=bbs&b=2504211353570682271301.jpg
+
+4. 붙임4_선정평가_PT서식.pptx (4459KB)
+   URL: https://itp.or.kr/common/COM_FILEDOWN.ASP?a=bbs&b=2504211353570670955895.pptx
+
+다운로드 방식: JavaScript 함수 fncFileDownload를 통해 서버에 요청하며, 실제 URL은 위와 같은 형식임
