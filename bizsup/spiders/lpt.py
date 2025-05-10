@@ -27,6 +27,9 @@ class LptSpider(scrapy.Spider):
     output_dir = 'output/ltp'
     page_count = 0
     max_pages = 3
+    items_selector = "table.bdListTbl tbody tr  td.subject a"
+    details_page_main_content_selector = "div.board-biz-view"
+    attachment_links_selector = "ul.file-list li a"
     custom_settings = {
         "PLAYWRIGHT_ABORT_REQUEST": abort_request,  # Aborting unnecessary requests
     }
@@ -42,9 +45,8 @@ class LptSpider(scrapy.Spider):
     async def parse(self, response):
         self.page_count += 1
         
-        
         try :
-            items = response.css('table.bdListTbl tbody tr')
+            items = response.css(self.items_selector)
             
             for index, item in enumerate(items, start=1):
                 # Extract details from the list item
@@ -52,12 +54,13 @@ class LptSpider(scrapy.Spider):
                 if not number:
                     number = str(int(time.time()))
                     
-                title = item.css('td.subject a span.subjectWr::text').get('').strip()
+                # title = item.css('td.subject a span.subjectWr::text').get('').strip()
 
                 # 동적으로 selector 생성
-                # index = index + 1  # nth-child는 1부터 시작하므로 1을 더함
-                selector = f"table.bdListTbl tbody tr:nth-child({index}) td.subject a"
-
+                # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
+                selector = self.make_selector(self.items_selector, index)
+                # selector = f"table.bdListTbl tbody tr:nth-child({index}) td.subject a"
+            
                 yield Request(
                     url="https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013",
                     meta={
@@ -97,7 +100,7 @@ class LptSpider(scrapy.Spider):
         self.logger.info(f"Page content: +++++++++++++++++++++++++++++++++++++")
         
         
-        main_content = response.css('div.board-biz-view').get('').strip()
+        main_content = response.css(self.details_page_main_content_selector).get('').strip()
         cleaned_content = re.sub(r'<[^>]+>', ' ', main_content).strip() if main_content else ''
         
         
@@ -113,7 +116,7 @@ class LptSpider(scrapy.Spider):
             
         current_url = response.url
             
-        attachment_links = response.css('ul.file-list li a')
+        attachment_links = response.css(self.attachment_links_selector)
         if attachment_links:
             # Create directory for attachments
             attachment_dir = f"{self.output_dir}/{number}"
@@ -140,6 +143,8 @@ class LptSpider(scrapy.Spider):
                         filename = filename[:match.end()]
                     # filename = self.clean_filename(filename)
                     
+                    selector = self.make_selector(self.attachment_links_selector, index)
+                    
                     yield scrapy.Request(
                         url=current_url,
                         # callback=self.save_attachment,
@@ -156,8 +161,8 @@ class LptSpider(scrapy.Spider):
                                 # PageMethod("wait_for_load_state", "domcontentloaded")  # 페이지 로드 대기
                                 PageMethod(
                                     click_and_handle_download, # 정의한 호출 가능한 함수 전달 [1, 7]
-                                    selector=f"ul.file-list li:nth-child({index}) a", # 함수에 전달할 인자
-                                    save_path=attachment_dir # 함수에 전달할 인자
+                                    selector = selector, # 함수에 전달할 인자
+                                    save_path = attachment_dir # 함수에 전달할 인자
                                 ),
                             ],
                             "errback": self.errback,
@@ -192,6 +197,18 @@ class LptSpider(scrapy.Spider):
             # 확장자 위치까지만 포함하여 자름
             return filename[:match.end()]
         return filename  # 확장자가 없으면 원래 문자열 반환
+    
+    
+    def make_selector(self, items_selector, index):
+        # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
+        if 'tr' in items_selector:
+            selector = items_selector.replace('tr', f'tr:nth-child({index})')
+        elif 'li' in items_selector:
+            selector = items_selector.replace('li', f'li:nth-child({index})')
+        else:
+            raise ValueError("Invalid items_selector format")
+        
+        return selector
 
 
     async def errback(self, failure):
