@@ -1,5 +1,7 @@
 # Bizsup - 사업지원 공고 크롤러
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/baltop/bizsupport)
+
 한국 테크노파크 및 비즈니스 지원 기관의 사업 공고를 수집하는 Scrapy 기반 웹 크롤링 시스템입니다.
 
 ## 설치 방법
