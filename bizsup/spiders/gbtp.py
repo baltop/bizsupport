@@ -10,16 +10,17 @@ def abort_request(request):
         or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])  
         or "google-analytics.com" in request.url
         or "googletagmanager.com" in request.url
-
+        or "atchFileId" in request.url
+        or "loginImpl" in request.url
     )
     
     
-class ItpSpider(scrapy.Spider):
-    name = 'itp'
-    allowed_domains = ['itp.or.kr']
-    start_urls = ['https://itp.or.kr/intro.asp?tmid=13']
-    base_url = 'https://itp.or.kr'
-    output_dir = 'output/itp_output'
+class GbtpSpider(scrapy.Spider):
+    name = 'gbtp'
+    allowed_domains = ['gbtp.or.kr']
+    start_urls = ['https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021']
+    base_url = 'https://gbtp.or.kr'
+    output_dir = 'output/gbtp_output'
     page_count = 0
     max_pages = 4
     custom_settings = {
@@ -27,7 +28,7 @@ class ItpSpider(scrapy.Spider):
     }
 
     def __init__(self, *args, **kwargs):
-        super(ItpSpider, self).__init__(*args, **kwargs)
+        super(GbtpSpider, self).__init__(*args, **kwargs)
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
@@ -40,7 +41,7 @@ class ItpSpider(scrapy.Spider):
                     "playwright": True,
                     "playwright_include_page": True,
                     "playwright_page_methods": [
-                        PageMethod("wait_for_selector", "table.list")
+                        # PageMethod("wait_for_selector", "table.tablelist")
                     ]
                 }
             )
@@ -53,22 +54,26 @@ class ItpSpider(scrapy.Spider):
         
         try:
             # Extract announcement items from the table
-            items = response.css('table.list.fixed tbody tr')
+            items = response.css('table.tablelist tbody tr')
             
             for item in items:
                 
                 # Extract details from the list item
                 number = item.css('td:nth-child(1)::text').get('').strip()
-                title = item.css('td.subject a::text').get('').strip()
+                title = item.css('td.title a::text').get('').strip()
+                titleclick = item.css('td.title a::text')
 
                 # Get the detail page URL
-                detail_url = item.css('td.subject a::attr(href)').get()
+                detail_url = item.css('td.title a::attr(href)').get()
                 
                 if detail_url:
+                    # await page.wait_for_selector(f'text="{titleclick}"')  # 클릭할 요소가 로드되었는지 확인
                     # Click on the link to open the detail page in a new tab
                     await page.click(f'text="{title}"')
+                    
                     # Wait for the new page to open
-                    new_page = await page.context.wait_for_event('page')
+                    new_page = await page.context.wait_for_event('page',timeout=180000)
+
                     # Wait for the page to load
                     await new_page.wait_for_load_state('networkidle')
                     
