@@ -27,7 +27,8 @@ class LptSpider(scrapy.Spider):
     output_dir = 'output/ltp'
     page_count = 0
     max_pages = 3
-    items_selector = "table.bdListTbl tbody tr  td.subject a"
+    items_selector = "table.bdListTbl tbody tr"
+    click_selector = "table.bdListTbl tbody tr  td.subject a"
     details_page_main_content_selector = "div.board-biz-view"
     attachment_links_selector = "ul.file-list li a"
     custom_settings = {
@@ -54,11 +55,11 @@ class LptSpider(scrapy.Spider):
                 if not number:
                     number = str(int(time.time()))
                     
-                # title = item.css('td.subject a span.subjectWr::text').get('').strip()
+                title = item.css('td.subject a span.subjectWr::text').get('').strip()
 
                 # 동적으로 selector 생성
                 # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
-                selector = self.make_selector(self.items_selector, index)
+                selector = self.make_selector(self.click_selector, index)
                 # selector = f"table.bdListTbl tbody tr:nth-child({index}) td.subject a"
             
                 yield Request(
@@ -81,7 +82,7 @@ class LptSpider(scrapy.Spider):
         except Exception as e:
             self.logger.error(f"Error occurred: {e}")
             self.logger.error(f"Response URL: {response.url}")
-            self.logger.error(f"Response body: {response.text}")
+            # self.logger.error(f"Response body: {response.text}")
             self.logger.error(f"Meta data: {response.meta}")
         # finally:
         #     await page.close()
@@ -174,8 +175,8 @@ class LptSpider(scrapy.Spider):
 
     def parse_download_info(self, response):
         # click_and_handle_download 함수의 반환 값 (저장된 파일 경로) 가져오기
-        saved_file_path = response.meta["playwright_page_methods"].result
-        self.logger.info(f"File downloaded and saved to: {saved_file_path}")
+        # saved_file_path = response.meta["playwright_page_methods"].result
+        self.logger.info(f"File downloaded and saved ")
 
 
 
@@ -202,9 +203,9 @@ class LptSpider(scrapy.Spider):
     def make_selector(self, items_selector, index):
         # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
         if 'tr' in items_selector:
-            selector = items_selector.replace('tr', f'tr:nth-child({index})')
+            selector = re.sub(r'( tr(\.[a-zA-Z0-9_-]+)?)', rf'\1:nth-child({index})', items_selector)
         elif 'li' in items_selector:
-            selector = items_selector.replace('li', f'li:nth-child({index})')
+            selector = re.sub(r'( li(\.[a-zA-Z0-9_-]+)?)', rf'\1:nth-child({index})', items_selector)
         else:
             raise ValueError("Invalid items_selector format")
         
