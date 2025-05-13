@@ -178,3 +178,4 @@ cython_debug/
 
 output/
 **/.claude/settings.local.json
+uv.lock

@@ -1,10 +1,10 @@
 list link
 - selector : table > tbody > tr > td:nth-child(2) > p > a
-- link pattern : ?mCode=MN013&mode=view&mgr_seq=16&board_seq=9579xxx
+- link pattern : ?mCode=MN013&mode=view&mgr_seq=16&board_seq={item_index}
 
 pagination link
 - selector : div.paginate > a
-- link pattern : ?robot=Y&mCode=MN013&page=x
+- link pattern : ?robot=Y&mCode=MN013&page={page_index}
 
 detail link
 - selector : div.board-view-con > list > li > a

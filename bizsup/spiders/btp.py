@@ -24,6 +24,13 @@ class BtpSpider(scrapy.Spider):
 
         # Extract announcement items
         items = response.css('table.bdListTbl > tbody > tr')
+        cur_url = response.url
+        # cur_url 에서 ? 찾아서  앞에 있는 부분을 base_url로 설정
+        if '?' in cur_url:
+            cur_base_url = cur_url.split('?')[0]
+        else:
+            cur_base_url = cur_url
+
         
         for item in items:
             # Extract details from the list item
@@ -35,7 +42,7 @@ class BtpSpider(scrapy.Spider):
             # Get the detail page URL
             detail_url = item.css('td.subject p.stitle a::attr(href)').get()
             if detail_url:
-                full_url = urljoin(self.base_url, detail_url)
+                full_url = urljoin(cur_base_url, detail_url)
                 yield scrapy.Request(
                     url=full_url,
                     callback=self.parse_detail,

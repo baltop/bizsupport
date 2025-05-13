@@ -14,7 +14,6 @@ def abort_request(request):
         or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])  
         or "google-analytics.com" in request.url
         or "googletagmanager.com" in request.url
-
     )
 
 
@@ -26,7 +25,7 @@ class LptSpider(scrapy.Spider):
     base_url = 'https://www.btp.or.kr'
     output_dir = 'output/ltp'
     page_count = 0
-    max_pages = 3
+    max_pages = 5
     items_selector = "table.bdListTbl tbody tr"
     click_selector = "table.bdListTbl tbody tr  td.subject a"
     details_page_main_content_selector = "div.board-biz-view"
@@ -63,13 +62,13 @@ class LptSpider(scrapy.Spider):
                 # selector = f"table.bdListTbl tbody tr:nth-child({index}) td.subject a"
             
                 yield Request(
-                    url="https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013",
+                    url=f"https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&robot=Y&carrot={number}",
                     meta={
                         "playwright": True,
                         "playwright_include_page": True,
                         "playwright_page_methods": [
                             PageMethod("click", selector),  # 클릭 이벤트
-                            PageMethod("wait_for_load_state", "domcontentloaded")  # 페이지 로드 대기
+                            PageMethod("wait_for_load_state", "networkidle")  # 페이지 로드 대기
                         ],
                         "errback": self.errback,
                         "number": number,
@@ -87,6 +86,13 @@ class LptSpider(scrapy.Spider):
         # finally:
         #     await page.close()
 
+                # Check if we should proceed to the next page
+        if self.page_count < self.max_pages:
+            next_page = self.page_count + 1
+            next_page_url = f"https://www.btp.or.kr/kor/CMS/Board/Board.do?robot=Y&mCode=MN013&page={next_page}"
+
+            yield scrapy.Request(url=next_page_url, callback=self.parse)
+
 
 
     async def parse_details(self, response):
@@ -96,7 +102,7 @@ class LptSpider(scrapy.Spider):
         number = response.meta.get('number', '')
         title = response.meta.get('title', '')
         self.logger.info(f"Number: {number}, Title: {title}")
-        html = await page.content()
+        # html = await page.content()
         # self.logger.info(f"Page content: {html}")
         self.logger.info(f"Page content: +++++++++++++++++++++++++++++++++++++")
         
@@ -130,6 +136,8 @@ class LptSpider(scrapy.Spider):
 
             # enumerate를 사용하여 index와 link를 순회
             for index, link in enumerate(attachment_links, start=1):
+                if len(attachment_links) > index+1:
+                    break
                 file_url = link.css('::attr(href)').get()
                 # index = index + 1  # nth-child는 1부터 시작하므로 1을 더함
                 if file_url:
@@ -147,10 +155,11 @@ class LptSpider(scrapy.Spider):
                     selector = self.make_selector(self.attachment_links_selector, index)
                     
                     yield scrapy.Request(
-                        url=current_url,
+                        # url=current_url,
+                        url=file_url,
                         # callback=self.save_attachment,
                         callback=self.parse_download_info,
-                        dont_filter=True,  # 중복 필터링 비활성화
+                        # dont_filter=True,  # 중복 필터링 비활성화
                         meta={
                             'attachment_dir': attachment_dir,
                             'filename': filename,
