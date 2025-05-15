@@ -96,7 +96,6 @@ FEED_EXPORT_ENCODING = "utf-8"
 DOWNLOAD_HANDLERS = { 
     "http" : "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler" , 
     "https" : "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler" , 
-    "file": "scrapy.core.downloader.handlers.file.FileDownloadHandler",
 } 
 
 DOWNLOAD_SLOTS = {
@@ -111,6 +110,6 @@ PLAYWRIGHT_LAUNCH_OPTIONS = {
 }
 
 PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 120 * 1000 
-PLAYWRIGHT_MAX_PAGES_PER_CONTEXT = 2
+PLAYWRIGHT_MAX_PAGES_PER_CONTEXT = 1
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'

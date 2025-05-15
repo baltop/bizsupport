@@ -18,24 +18,24 @@ def abort_request(request):
 
 
 
-class LptSpider(scrapy.Spider):
-    name = "lpt"
-    allowed_domains = ['btp.or.kr']
-    start_urls = ['https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013']
-    base_url = 'https://www.btp.or.kr'
-    output_dir = 'output/ltp'
+class MptSpider(scrapy.Spider):
+    name = "mpt"
+    allowed_domains = ['itp.or.kr']
+    start_urls = ['https://itp.or.kr/intro.asp?tmid=13']
+    base_url = 'https://www.itp.or.kr'
+    output_dir = 'output/mtp'
     page_count = 0
     max_pages = 1
-    items_selector = "table.bdListTbl tbody tr"
-    click_selector = "table.bdListTbl tbody tr  td.subject a"
-    details_page_main_content_selector = "div.board-biz-view"
-    attachment_links_selector = "div.board-biz-file ul.file-list li a"
+    items_selector = "table.list.fixed tbody tr"
+    click_selector = "table.list.fixed tbody tr  td.subject a"
+    details_page_main_content_selector = "div#content"
+    attachment_links_selector = "div.dl_view dl dd a"
     custom_settings = {
         "PLAYWRIGHT_ABORT_REQUEST": abort_request,  # Aborting unnecessary requests
     }
 
     def __init__(self, *args, **kwargs):
-        super(LptSpider, self).__init__(*args, **kwargs)
+        super(MptSpider, self).__init__(*args, **kwargs)
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
@@ -54,19 +54,19 @@ class LptSpider(scrapy.Spider):
                 if not number:
                     number = str(int(time.time()))
                     
-                title = item.css('td.subject a span.subjectWr::text').get('').strip()
+                title = item.css('td.subject a::text').get('').strip()
 
-                if number != '4101':
+                if number != '2871':
                     self.logger.info(f"Number not found for item {index}, skipping...")
                     continue
 
                 # 동적으로 selector 생성
                 # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
-                # selector = self.make_selector(self.click_selector, index)
-                selector = f"table.bdListTbl tbody tr:nth-child(1) td.subject a"
+                selector = self.make_selector(self.click_selector, index)
+                # selector = f"table.bdListTbl tbody tr:nth-child({index}) td.subject a"
             
                 yield Request(
-                    url=f"https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&robot=Y&carrot={number}",
+                    url=f"https://itp.or.kr/intro.asp?tmid=13&seq={number}",
                     meta={
                         "playwright": True,
                         "playwright_include_page": True,
