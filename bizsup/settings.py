@@ -20,15 +20,15 @@ NEWSPIDER_MODULE = "bizsup.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 4
+# CONCURRENT_REQUESTS = 6
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 4
-CONCURRENT_REQUESTS_PER_IP = 4
+CONCURRENT_REQUESTS_PER_DOMAIN = 16
+CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -92,17 +92,18 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 # scrapy-playwright
+PLAYWRIGHT_BROWSER_TYPE = "chromium"
 
 DOWNLOAD_HANDLERS = { 
     "http" : "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler" , 
     "https" : "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler" , 
 } 
 
-DOWNLOAD_SLOTS = {
-    "btp.or.kr": {"concurrency": 1, "delay": 6, "randomize_delay": True},
-}
+# DOWNLOAD_SLOTS = {
+#     "btp.or.kr": {"concurrency": 1, "delay": 6, "randomize_delay": True},
+# }
 DOWNLOAD_DELAY = 6
-HTTPCACHE_ENABLED=True
+HTTPCACHE_ENABLED=False
 
 PLAYWRIGHT_LAUNCH_OPTIONS = {
     "headless": True,
@@ -110,6 +111,6 @@ PLAYWRIGHT_LAUNCH_OPTIONS = {
 }
 
 PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 120 * 1000 
-PLAYWRIGHT_MAX_PAGES_PER_CONTEXT = 1
+PLAYWRIGHT_MAX_PAGES_PER_CONTEXT = 4
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'

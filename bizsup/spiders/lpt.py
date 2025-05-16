@@ -6,15 +6,17 @@ from scrapy_playwright.page import PageMethod
 import os
 import re
 from playwright.async_api import Page
+from bizsup.utils import abort_request
 
 
-def abort_request(request):
-    return (
-        request.resource_type in ["image", "media", "stylesheet"]  # Block resource-heavy types
-        or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])  
-        or "google-analytics.com" in request.url
-        or "googletagmanager.com" in request.url
-    )
+
+# def abort_request(request):
+#     return (
+#         request.resource_type in ["image", "media", "stylesheet"]  # Block resource-heavy types
+#         or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])  
+#         or "google-analytics.com" in request.url
+#         or "googletagmanager.com" in request.url
+#     )
 
 
 
@@ -25,13 +27,22 @@ class LptSpider(scrapy.Spider):
     base_url = 'https://www.btp.or.kr'
     output_dir = 'output/ltp'
     page_count = 0
-    max_pages = 1
+    max_pages = 4
     items_selector = "table.bdListTbl tbody tr"
-    click_selector = "table.bdListTbl tbody tr  td.subject a"
+    click_selector = "table.bdListTbl tbody tr  td.subject a span.subjectWr"
     details_page_main_content_selector = "div.board-biz-view"
     attachment_links_selector = "div.board-biz-file ul.file-list li a"
     custom_settings = {
-        "PLAYWRIGHT_ABORT_REQUEST": abort_request,  # Aborting unnecessary requests
+        'PLAYWRIGHT_ABORT_REQUEST': abort_request,  # Aborting unnecessary requests
+        'CONCURRENT_REQUESTS': 12,
+        'DOWNLOAD_DELAY': 8,
+        'COOKIES_ENABLED': True,
+        'PLAYWRIGHT_BROWSER_TYPE': 'chromium',
+        'TWISTED_REACTOR': "twisted.internet.asyncioreactor.AsyncioSelectorReactor",
+        'DOWNLOAD_HANDLERS': {
+            "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+            "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+        },
     }
 
     def __init__(self, *args, **kwargs):
@@ -40,12 +51,22 @@ class LptSpider(scrapy.Spider):
             os.makedirs(self.output_dir)
 
 
+    def start_requests(self):
+        yield scrapy.Request(
+            url=self.start_urls[0],
+            meta={
+                "playwright": True,
+                "playwright_include_page": True
+            })
 
 
     async def parse(self, response):
         self.page_count += 1
         
-        try :
+        current_url = response.url
+
+        try:
+            page = response.meta["playwright_page"]
             items = response.css(self.items_selector)
             
             for index, item in enumerate(items, start=1):
@@ -56,30 +77,28 @@ class LptSpider(scrapy.Spider):
                     
                 title = item.css('td.subject a span.subjectWr::text').get('').strip()
 
-                if number != '4101':
-                    self.logger.info(f"Number not found for item {index}, skipping...")
-                    continue
-
                 # 동적으로 selector 생성
                 # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
-                # selector = self.make_selector(self.click_selector, index)
-                selector = f"table.bdListTbl tbody tr:nth-child(1) td.subject a"
+                selector = self.make_selector(self.click_selector, index)
+                # selector = f"table.bdListTbl tbody tr:nth-child(1) td.subject a"
+                self.logger.info(f"selector is , {selector}")
             
                 yield Request(
-                    url=f"https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&robot=Y&carrot={number}",
+                    url= current_url + f"&carrot={number}",
                     meta={
                         "playwright": True,
                         "playwright_include_page": True,
                         "playwright_page_methods": [
                             PageMethod("click", selector),  # 클릭 이벤트
-                            PageMethod("wait_for_load_state", "networkidle")  # 페이지 로드 대기
+                            PageMethod("wait_for_load_state", "domcontentloaded"),  # 페이지 로드 대기
+                            # PageMethod("wait_for_timeout", 60000),  # 60초 대기
                         ],
                         "errback": self.errback,
                         "number": number,
                         "title": title,
                     },
                     callback=self.parse_details,  # 이동한 페이지를 parse_details로 전달
-                    dont_filter=True,  # 중복 필터링 비활성화
+                    # dont_filter=True,  # 중복 필터링 비활성화
                 )
                 
         except Exception as e:
@@ -87,26 +106,32 @@ class LptSpider(scrapy.Spider):
             self.logger.error(f"Response URL: {response.url}")
             # self.logger.error(f"Response body: {response.text}")
             self.logger.error(f"Meta data: {response.meta}")
-        # finally:
-        #     await page.close()
+        finally:
+            await page.close()
 
                 # Check if we should proceed to the next page
         if self.page_count < self.max_pages:
             next_page = self.page_count + 1
             next_page_url = f"https://www.btp.or.kr/kor/CMS/Board/Board.do?robot=Y&mCode=MN013&page={next_page}"
 
-            yield scrapy.Request(url=next_page_url, callback=self.parse)
+            yield scrapy.Request(
+                url=next_page_url, 
+                callback=self.parse,
+                meta={
+                "playwright": True,
+                "playwright_include_page": True
+            })
 
 
 
     async def parse_details(self, response):
-         # Extract data after clicking the link
-        # page = response.meta["playwright_page"]
+        # Extract data after clicking the link
+        page = response.meta["playwright_page"]
         
         number = response.meta.get('number', '')
         title = response.meta.get('title', '')
         self.logger.info(f"Number: {number}, Title: {title}")
-        # html = await page.content()
+        html = await page.content()
         # self.logger.info(f"Page content: {html}")
         self.logger.info(f"Page content: +++++++++++++++++++++++++++++++++++++")
         
@@ -140,9 +165,6 @@ class LptSpider(scrapy.Spider):
 
             # enumerate를 사용하여 index와 link를 순회
             for index, link in enumerate(attachment_links, start=1):
-                if index > 1:
-                    continue
-
                 file_url = link.css('::attr(href)').get()
                 # index = index + 1  # nth-child는 1부터 시작하므로 1을 더함
                 if file_url:
@@ -158,57 +180,77 @@ class LptSpider(scrapy.Spider):
                     # filename = self.clean_filename(filename)
                     
                     selector = self.make_selector(self.attachment_links_selector, index)
-                    selector = selector + " span::text"  # span 태그의 텍스트를 선택하는 selector
-                    clicktext = response.css(selector).get().strip()
+                    selectorspan = selector + " span::text"  # span 태그의 텍스트를 선택하는 selector
+                    clicktext = response.css(selectorspan).get().strip()
                     self.logger.info(f"Click text: {clicktext}")
-                    selector = f"table.bdListTbl tbody tr:  td.subject a"                    
+                    # selector = f"table.bdListTbl tbody tr:  td.subject a"                    
                     # selector = "//div[@class='board-biz-file']//ul[@class='file-list']//li[1]//a//span"
                     
                     yield scrapy.Request(
-                        # url=current_url,
-                        url=file_url,
-                        # callback=self.save_attachment,
-                        callback=self.parse_download_info,
-                        # dont_filter=True,  # 중복 필터링 비활성화
+                        url=current_url+"&carrot="+str(index),
+                        # url=file_url,
+                        callback=self.save_attachment,
+                        # callback=self.parse_download_info,
+                        dont_filter=True,  # 중복 필터링 비활성화
                         meta={
                             'attachment_dir': attachment_dir,
                             'filename': filename,
                             "playwright": True,
                             "playwright_include_page": True,
+                            # "playwright_download_route": "**/*",
+                            # "playwright_download_handler": self.handle_download,
                             "playwright_page_methods": [
-                                PageMethod("click", selector),  # 동적으로 생성된 selector 전달
-                                # PageMethod("click", text_selector),  # 텍스트 기반 선택자 전달
-                                PageMethod("wait_for_load_state", "networkidle")  # 페이지 로드 대기
-                                # PageMethod(
-                                #     click_and_handle_download, # 정의한 호출 가능한 함수 전달 [1, 7]
-                                #     selector = selector, # 함수에 전달할 인자
-                                #     save_path = attachment_dir # 함수에 전달할 인자
-                                # ),
+                                # PageMethod("click", selector),  # 동적으로 생성된 selector 전달
+                                # PageMethod("click", f"text={clicktext}"),  # 텍스트 기반 선택자 전달
+                                # PageMethod("wait_for_load_state", "networkidle")  # 페이지 로드 대기
+                                PageMethod(
+                                    click_and_handle_download, # 정의한 호출 가능한 함수 전달 [1, 7]
+                                    selector = f"text={clicktext}", # 함수에 전달할 인자
+                                    save_path = attachment_dir # 함수에 전달할 인자
+                                ),
+                                # PageMethod("wait_for_load_state", "domcontentloaded"), 
                             ],
                             "errback": self.errback,
                         }
                     )            
                     
         # Further processing of html content
-        # await page.close()
+        if page and not page.is_closed():
+            await page.close()
 
     def parse_download_info(self, response):
         # click_and_handle_download 함수의 반환 값 (저장된 파일 경로) 가져오기
         # saved_file_path = response.meta["playwright_page_methods"].result
+        if filename := response.meta.get("playwright_suggested_filename"):
+            attachment_dir = response.meta.get('attachment_dir', '')
         self.logger.info(f"File downloaded and saved ")
 
 
+    # async def handle_download(self, download):
+    #     file_path = f"./downloads/{download.suggested_filename}"
+    #     await download.save_as(file_path)
+    #     print(f"Downloaded file to {file_path}")
 
-    def save_attachment(self, response):
-        attachment_dir = response.meta.get('attachment_dir', '')
-        filename = response.meta.get('filename', '')
-        
-        file_path = os.path.join(attachment_dir, filename)
-        
-        with open(file_path, 'wb') as f:
-            f.write(response.body)
-        
-        self.logger.info(f"Saved attachment: {file_path}")
+    async def save_attachment(self, response):
+        page = response.meta["playwright_page"]
+        filename = response.meta.get("filename")
+        # current_url = response.url
+        # if filename2 := response.meta.get("playwright_suggested_filename"):
+        #     attachment_dir = response.meta.get('attachment_dir', '')
+        #     file_path = os.path.join(attachment_dir, filename)
+
+        #     with open(file_path, 'wb') as f:
+        #         f.write(response.body)
+
+        #     self.logger.info(f"Saved attachment: {file_path}")
+        yield {
+            "url": response.url,
+            "response_cls": response.__class__.__name__,
+            "first_bytes": response.body[:60],
+            "filename": response.meta.get("playwright_suggested_filename"),
+        }
+        if page and not page.is_closed():
+            await page.close()
 
     def clean_filename(filename):
         # 정규식을 사용하여 .알파벳3글자 형식의 확장자를 찾음
