@@ -82,6 +82,13 @@ def clean_filename(filename: str) -> str:
     
     return filename.strip()
 
+        # # 정규식을 사용하여 .알파벳3글자 형식의 확장자를 찾음
+        # match = re.search(r'\.[a-zA-Z]{3,4}', filename)
+        # if match:
+        #     # 확장자 위치까지만 포함하여 자름
+        #     return filename[:match.end()]
+        # return filename  # 확장자가 없으면 원래 문자열 반환
+
 
 def get_extension_from_content_type(content_type: str) -> str:
     """
@@ -170,6 +177,7 @@ def clean_html(html_content: str) -> str:
     return cleaned
 
 
+# items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
 def make_selector(items_selector: str, index: int) -> str:
     """
     Create a selector for a specific item by index.
@@ -182,43 +190,16 @@ def make_selector(items_selector: str, index: int) -> str:
         str: Selector for the specific item
     """
     if 'tr' in items_selector:
-        return items_selector.replace('tr', f'tr:nth-child({index})')
+        selector = re.sub(r'( tr(\.[a-zA-Z0-9_-]+)?)', rf'\1:nth-child({index})', items_selector)
     elif 'li' in items_selector:
-        return items_selector.replace('li', f'li:nth-child({index})')
+        selector = re.sub(r'( li(\.[a-zA-Z0-9_-]+)?)', rf'\1:nth-child({index})', items_selector)
     else:
-        raise ValueError(f"Invalid items_selector format: {items_selector}")
+        raise ValueError("Invalid items_selector format")
+    
+    return selector
 
 
-async def click_and_handle_download(page: Page, selector: str, save_path: str) -> str:
-    """
-    Click a download link and save the downloaded file.
-    
-    Args:
-        page: Playwright page object
-        selector: CSS selector for the download link
-        save_path: Directory path to save the file
-        
-    Returns:
-        str: Path to the saved file
-    """
-    # Wait for download to start
-    async with page.expect_download() as download_info:
-        # Click the download link
-        locator = page.locator(selector)
-        await locator.click()
 
-    # Get download object
-    download = await download_info.value
-    
-    # Generate save path with suggested filename
-    filename = download.suggested_filename
-    clean_name = clean_filename(filename)
-    full_save_path = os.path.join(save_path, clean_name)
-    
-    # Save the file
-    await download.save_as(full_save_path)
-    
-    return full_save_path
 
 
 def save_markdown_content(output_dir: str, file_id: str, content: str) -> str:

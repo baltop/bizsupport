@@ -6,18 +6,8 @@ from scrapy_playwright.page import PageMethod
 import os
 import re
 from playwright.async_api import Page
-from bizsup.utils import abort_request
-
-
-
-# def abort_request(request):
-#     return (
-#         request.resource_type in ["image", "media", "stylesheet"]  # Block resource-heavy types
-#         or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])  
-#         or "google-analytics.com" in request.url
-#         or "googletagmanager.com" in request.url
-#     )
-
+from bizsup.utils import abort_request, create_output_directory, make_selector, clean_filename
+import asyncio 
 
 
 class LptSpider(scrapy.Spider):
@@ -30,25 +20,19 @@ class LptSpider(scrapy.Spider):
     max_pages = 4
     items_selector = "table.bdListTbl tbody tr"
     click_selector = "table.bdListTbl tbody tr  td.subject a span.subjectWr"
+    
+    next_page_url = "https://www.btp.or.kr/kor/CMS/Board/Board.do?robot=Y&mCode=MN013&page={next_page}"
+    
     details_page_main_content_selector = "div.board-biz-view"
     attachment_links_selector = "div.board-biz-file ul.file-list li a"
+    
     custom_settings = {
         'PLAYWRIGHT_ABORT_REQUEST': abort_request,  # Aborting unnecessary requests
-        'CONCURRENT_REQUESTS': 12,
-        'DOWNLOAD_DELAY': 8,
-        'COOKIES_ENABLED': True,
-        'PLAYWRIGHT_BROWSER_TYPE': 'chromium',
-        'TWISTED_REACTOR': "twisted.internet.asyncioreactor.AsyncioSelectorReactor",
-        'DOWNLOAD_HANDLERS': {
-            "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
-            "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
-        },
     }
 
     def __init__(self, *args, **kwargs):
         super(LptSpider, self).__init__(*args, **kwargs)
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
+        create_output_directory(self.output_dir)  # Create output directory if it doesn't exist
 
 
     def start_requests(self):
@@ -70,6 +54,8 @@ class LptSpider(scrapy.Spider):
             items = response.css(self.items_selector)
             
             for index, item in enumerate(items, start=1):
+                # 3초간 휴지
+                # await asyncio.sleep(1)
                 # Extract details from the list item
                 number = item.css('td:nth-child(1)::text').get('').strip()
                 if not number:
@@ -79,7 +65,7 @@ class LptSpider(scrapy.Spider):
 
                 # 동적으로 selector 생성
                 # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
-                selector = self.make_selector(self.click_selector, index)
+                selector = make_selector(self.click_selector, index)
                 # selector = f"table.bdListTbl tbody tr:nth-child(1) td.subject a"
                 self.logger.info(f"selector is , {selector}")
             
@@ -112,7 +98,8 @@ class LptSpider(scrapy.Spider):
                 # Check if we should proceed to the next page
         if self.page_count < self.max_pages:
             next_page = self.page_count + 1
-            next_page_url = f"https://www.btp.or.kr/kor/CMS/Board/Board.do?robot=Y&mCode=MN013&page={next_page}"
+            next_page_url = self.next_page_url.format(next_page=next_page)
+            self.logger.info(f"Next page URL: {next_page_url}")
 
             yield scrapy.Request(
                 url=next_page_url, 
@@ -170,16 +157,16 @@ class LptSpider(scrapy.Spider):
                 if file_url:
                     file_url = urljoin(self.base_url, file_url)
                     filename = link.css('span::text').get('').strip()
-                    # filename 중간에 \n이 있으면 삭제
-                    filename = filename.replace('\n', '').replace('(', '').replace(')', '').replace('\r', '').strip()
-                    self.logger.info(f"Filename: {filename}")
-                    match = re.search(r'\.[a-zA-Z]{3,4}', filename)
-                    if match:
-                        # 확장자 위치까지만 포함하여 자름
-                        filename = filename[:match.end()]
-                    # filename = self.clean_filename(filename)
+                    # # filename 중간에 \n이 있으면 삭제
+                    # filename = filename.replace('\n', '').replace('(', '').replace(')', '').replace('\r', '').strip()
+                    # self.logger.info(f"Filename: {filename}")
+                    # match = re.search(r'\.[a-zA-Z]{2,4}', filename)
+                    # if match:
+                    #     # 확장자 위치까지만 포함하여 자름
+                    #     filename = filename[:match.end()]
+                    filename = clean_filename(filename)
                     
-                    selector = self.make_selector(self.attachment_links_selector, index)
+                    selector = make_selector(self.attachment_links_selector, index)
                     selectorspan = selector + " span::text"  # span 태그의 텍스트를 선택하는 selector
                     clicktext = response.css(selectorspan).get().strip()
                     self.logger.info(f"Click text: {clicktext}")
@@ -218,18 +205,14 @@ class LptSpider(scrapy.Spider):
         if page and not page.is_closed():
             await page.close()
 
-    def parse_download_info(self, response):
-        # click_and_handle_download 함수의 반환 값 (저장된 파일 경로) 가져오기
-        # saved_file_path = response.meta["playwright_page_methods"].result
-        if filename := response.meta.get("playwright_suggested_filename"):
-            attachment_dir = response.meta.get('attachment_dir', '')
-        self.logger.info(f"File downloaded and saved ")
+    # def parse_download_info(self, response):
+    #     # click_and_handle_download 함수의 반환 값 (저장된 파일 경로) 가져오기
+    #     # saved_file_path = response.meta["playwright_page_methods"].result
+    #     if filename := response.meta.get("playwright_suggested_filename"):
+    #         attachment_dir = response.meta.get('attachment_dir', '')
+    #     self.logger.info(f"File downloaded and saved ")
 
 
-    # async def handle_download(self, download):
-    #     file_path = f"./downloads/{download.suggested_filename}"
-    #     await download.save_as(file_path)
-    #     print(f"Downloaded file to {file_path}")
 
     async def save_attachment(self, response):
         page = response.meta["playwright_page"]
@@ -252,32 +235,13 @@ class LptSpider(scrapy.Spider):
         if page and not page.is_closed():
             await page.close()
 
-    def clean_filename(filename):
-        # 정규식을 사용하여 .알파벳3글자 형식의 확장자를 찾음
-        match = re.search(r'\.[a-zA-Z]{3,4}', filename)
-        if match:
-            # 확장자 위치까지만 포함하여 자름
-            return filename[:match.end()]
-        return filename  # 확장자가 없으면 원래 문자열 반환
-    
-    
-    def make_selector(self, items_selector, index):
-        # items_selector에서 tr 이나 ul 을 찾아서 nth-child(index)를 추가하여 생성
-        if 'tr' in items_selector:
-            selector = re.sub(r'( tr(\.[a-zA-Z0-9_-]+)?)', rf'\1:nth-child({index})', items_selector)
-        elif 'li' in items_selector:
-            selector = re.sub(r'( li(\.[a-zA-Z0-9_-]+)?)', rf'\1:nth-child({index})', items_selector)
-        else:
-            raise ValueError("Invalid items_selector format")
-        
-        return selector
-
 
     async def errback(self, failure):
         page = failure.request.meta["playwright_page"]
         await page.close()
         
         
+
 async def click_and_handle_download(page: Page, selector: str, save_path: str) -> str:
     # 다운로드를 기다리는 context manager 시작 [4]
     async with page.expect_download() as download_info:
@@ -294,6 +258,7 @@ async def click_and_handle_download(page: Page, selector: str, save_path: str) -
 
     # 파일 저장 [4]
     await download.save_as(full_save_path)
+
 
     # 저장된 파일 경로를 결과로 반환 [1]
     return full_save_path
