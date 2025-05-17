@@ -5,6 +5,10 @@ import os
 import sys
 import time
 
+
+# 이 스크립트는 사이트 코드와 URL이 포함된 CSV 파일을 읽고, 셸에서 실행할 명령어를 생성하여 실행합니다.
+# 이 명령어는 Playwright를 사용해 웹 페이지의 페이지네이션 링크를 찾기 위해 설계되었습니다.
+
 def execute_bash_command(command):
     try:
         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

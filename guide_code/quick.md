@@ -1,36 +1,77 @@
-import os
-import re
-import scrapy
-from urllib.parse import urlparse, urljoin, unquote
-from scrapy_playwright.page import PageMethod
 
-def abort_request(request):
-    return (
-        request.resource_type in ["image", "media", "stylesheet"]  # Block resource-heavy types
-        or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])  
-        or "google-analytics.com" in request.url
-        or "googletagmanager.com" in request.url
+## some useful code snippets for quick reference
 
-    )
-    
-    
-class ItpSpider(scrapy.Spider):
-    name = 'itp'
-    allowed_domains = ['itp.or.kr']
-    start_urls = ['https://itp.or.kr/intro.asp?tmid=13']
-    base_url = 'https://itp.or.kr'
-    output_dir = 'output/itp_output'
-    page_count = 0
-    max_pages = 4
-    custom_settings = {
-        "PLAYWRIGHT_ABORT_REQUEST": abort_request,  # Aborting unnecessary requests
-    }
 
-    def __init__(self, *args, **kwargs):
-        super(ItpSpider, self).__init__(*args, **kwargs)
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
+# url parsing
 
+```python
+        # Extract wr_id parameter from URL to use as unique ID
+        url_query = urlparse(response.url).query
+        wr_id = None
+        for param in url_query.split('&'):
+            if 'wr_id=' in param:
+                wr_id = param.split('=')[1]
+                break
+        
+        if not wr_id:
+            wr_id = f"unknown_{hash(response.url) % 10000}"
+```
+
+
+# filename extraction
+
+```python
+        # Check Content-Disposition header for filename
+        content_disposition = response.headers.get('Content-Disposition', b'').decode('utf-8', errors='ignore')
+        if 'filename=' in content_disposition:
+            server_filename = re.search(r'filename="?([^";]+)', content_disposition).group(1)
+            filename = unquote(server_filename)
+        
+        # If filename is still empty, use a default name based on Content-Type
+        if not filename:
+            content_type = response.headers.get('Content-Type', b'').decode('utf-8', errors='ignore').split(';')[0]
+            extension = self.get_extension_from_content_type(content_type)
+            filename = f"attachment_{hash(response.url) % 10000}{extension}"
+```
+
+
+# file download
+
+```python
+    def start_requests(self):
+        yield Request(url="https://example.org", meta={"playwright": True})
+        yield Request(
+            url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            meta={"playwright": True},
+        )
+
+    def parse(self, response, **kwargs):
+        if filename := response.meta.get("playwright_suggested_filename"):
+            (Path(__file__).parent / filename).write_bytes(response.body)
+        yield {
+            "url": response.url,
+            "response_cls": response.__class__.__name__,
+            "first_bytes": response.body[:60],
+            "filename": filename,
+        }
+```
+
+
+# current url
+
+```python
+        cur_url = response.url
+        # cur_url 에서 ? 찾아서  앞에 있는 부분을 base_url로 설정
+        if '?' in cur_url:
+            cur_base_url = cur_url.split('?')[0]
+        else:
+            cur_base_url = cur_url
+```
+
+
+# inpage playwright click
+
+```python
     def start_requests(self):
         for url in self.start_urls:
             yield scrapy.Request(
@@ -110,63 +151,13 @@ class ItpSpider(scrapy.Spider):
             self.logger.error(f"Meta data: {response.meta}")
         finally:
             await page.close()
+```
 
-    def parse_detail(self, response, meta):
-        # Extract metadata from the meta
-        number = meta.get('number', '')
-        title = meta.get('title', '')
-               
-        # Extract content from the detail page
-        content_section = response.css('div.content')
-        main_content = content_section.get('') if content_section else ''
-        
-        # Clean HTML tags if needed
-        cleaned_content = re.sub(r'<[^>]+>', ' ', main_content).strip() if main_content else ''
 
-        
-        # Save markdown file
-        md_filename = f"{self.output_dir}/{number}.md"
-        with open(md_filename, 'w', encoding='utf-8') as f:
-            f.write(cleaned_content)
-    
-        # Process attachments
-        attachment_links = response.css('div.dl_view dl dd a')
-        if attachment_links:
-            # Create directory for attachments
-            attachment_dir = f"{self.output_dir}/{number}"
-            if not os.path.exists(attachment_dir):
-                os.makedirs(attachment_dir)
-            
-            for link in attachment_links:
-                file_url = link.css('::attr(href)').get()
-                if file_url:
-                    file_url = urljoin(self.base_url, file_url)
-                    filename = link.css('::text').get('').strip()
-                    
-                    yield scrapy.Request(
-                        url=file_url,
-                        callback=self.save_attachment,
-                        meta={
-                            'attachment_dir': attachment_dir,
-                            'filename': filename
-                        }
-                    )
-        
-        return {
-            'id': detail_id,
-            'title': title,
-            'date': date,
-            'content': cleaned_content
-        }
-    
-    def save_attachment(self, response):
-        attachment_dir = response.meta.get('attachment_dir', '')
-        filename = response.meta.get('filename', '')
-        
-        file_path = os.path.join(attachment_dir, filename)
-        
-        with open(file_path, 'wb') as f:
-            f.write(response.body)
-        
-        self.logger.info(f"Saved attachment: {file_path}")
-    
+# nth pseudo class
+
+```python
+await page.locator(':nth-match(:text("Buy"), 3)').click();
+```
+
+
