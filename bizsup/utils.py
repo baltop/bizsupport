@@ -72,15 +72,11 @@ def clean_filename(filename: str) -> str:
     filename = ' '.join(filename.split())
     
     # Find the extension and make sure it's preserved
-    match = re.search(r'\.[a-zA-Z0-9]{2,4}$', filename)
+    match = re.search(r'\.[a-zA-Z]{2,4}', filename)
     if match:
-        # Truncate filename if it's too long, but preserve the extension
-        max_length = 100  # Adjust as needed
-        if len(filename) > max_length:
-            extension = filename[match.start():]
-            filename = filename[:max_length-len(extension)] + extension
-    
-    return filename.strip()
+        # 확장자 위치까지만 포함하여 자름
+        return filename[:match.end()]
+    return filename  # 확장자가 없으면 원래 문자열 반환
 
         # # 정규식을 사용하여 .알파벳3글자 형식의 확장자를 찾음
         # match = re.search(r'\.[a-zA-Z]{3,4}', filename)
