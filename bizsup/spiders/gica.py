@@ -6,7 +6,7 @@ from scrapy_playwright.page import PageMethod
 import os
 import re
 from playwright.async_api import Page
-from bizsup.utils import abort_request, create_output_directory, make_selector, clean_filename
+from bizsup.utils import abort_request, create_output_directory, make_selector, clean_filename, click_and_handle_download
 import asyncio
 from urllib.parse import urlparse, urlunparse
 
@@ -89,7 +89,7 @@ class GicaSpider(scrapy.Spider):
                 )
                 
         except Exception as e:
-            self.looger.error("parse"+ number + " " + title)
+            self.logger.error("parse"+ number + " " + title)
             self.logger.error(f"Error occurred: {e}")
             self.logger.error(f"Response URL: {response.url}")
             # self.logger.error(f"Response body: {response.text}")
@@ -237,37 +237,9 @@ class GicaSpider(scrapy.Spider):
 
     async def errback(self, failure):
         page = failure.request.meta["playwright_page"]
+        self.logger.error(f"Request failed: {failure.request.url}")
+        self.logger.error(f"Error: {failure.value}")
+        self.logger.error(f"Meta data: {failure.request.meta}")
         await page.close()
         
         
-
-async def click_and_handle_download(page: Page, selector: str, save_path: str, file_name: str) -> str:
-    try:
-        # 다운로드를 기다리는 context manager 시작 [4]
-        async with page.expect_download() as download_info:
-            # 다운로드를 트리거하는 요소 클릭 (Locators 사용 권장) [4]
-            # Playwright는 액션 수행 전에 요소가 보이고, 안정적인지 등을 자동으로 기다립니다 [8, 9]
-            locator = page.locator(selector) # CSS 또는 XPath 셀렉터 가능 [10]
-            await locator.click() # Playwright Locator click 메서드 사용 [5, 11]
-
-        # 다운로드 객체 가져오기 [4]
-        download = await download_info.value
-
-        if re.search(r'\.[a-zA-Z]{2,4}$', download.suggested_filename): 
-            cur_file_name = download.suggested_filename
-        else:
-            cur_file_name = file_name
-
-
-        # 파일 저장 경로 설정 (원하는 경로와 다운로드된 파일의 추천 이름 조합) [4]
-        full_save_path = f"{save_path}/{cur_file_name}"
-
-        # 파일 저장 [4]
-        await download.save_as(full_save_path)
-
-    except Exception as e:
-        print("click_and_handle_download " + save_path + " " + file_name)
-        print(f"Error occurred: {e}")
-        exit()
-    # 저장된 파일 경로를 결과로 반환 [1]
-    return full_save_path
