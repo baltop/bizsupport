@@ -24,6 +24,8 @@ def abort_request(request):
         or any(ext in request.url for ext in [".jpg", ".png", ".gif", ".css", ".mp4", ".webm"])
         or "google-analytics.com" in request.url
         or "googletagmanager.com" in request.url
+        or "googleapis.com" in request.url
+        or "google.com" in request.url
     )
 
 

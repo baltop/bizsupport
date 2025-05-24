@@ -12,7 +12,6 @@ from urllib.parse import urlparse, urlunparse
 
 
 
-
 async def click_and_handle_detail(page: Page, selector: str) -> str:
     try:
         # Wait for navigation after clicking
@@ -35,33 +34,36 @@ async def click_and_handle_detail(page: Page, selector: str) -> str:
 
 
 
-class KidpSpider(scrapy.Spider):
-    name = "kidp"
-    allowed_domains = ['kidp.or.kr']
-    start_urls = ['https://kidp.or.kr/?menuno=1202']
-    base_url = 'https://kidp.or.kr'
-    output_dir = 'output/kidp'
+
+
+
+class CnspcomSpider(scrapy.Spider):
+    name = "cnspcom"
+    allowed_domains = ['cnsp.or.kr']
+    start_urls = ['https://www.cnsp.or.kr/project/list.do']
+    base_url = 'https://cnsp.or.kr'
+    output_dir = 'output/cnspcom'
     page_count = 0
     max_pages = 2
-    items_selector = "table.board01-list tbody tr"
+    items_selector = "table.w-100.tableProject tbody tr"
+    item_num_selector = "td:nth-child(1)::text"
 
+    item_title_selector = "td.text-left div a::text"
+    click_selector = "td.text-left div a"
 
-    item_title_selector = "td.left a::text"
-    click_selector = "td.left a"
-
-    details_page_main_content_selector = "div#sub_contents"
-    attachment_links_selector = "td.end.left.Bleft a"
+    details_page_main_content_selector = "div.pvzone.mb-5"
+    attachment_links_selector = "div.pv-list ul li a"
     
-    next_page_url = "https://kidp.or.kr/index.html?menuno=1202&pageIndex={next_page}"
+    next_page_url = "https://www.cnsp.or.kr/project/list.do?&pn={next_page}"
     
     custom_settings = {
-        # "PLAYWRIGHT_ABORT_REQUEST": abort_request,  # Aborting unnecessary requests
+        "PLAYWRIGHT_ABORT_REQUEST": abort_request,  # Aborting unnecessary requests
     }
 
 
 
     def __init__(self, *args, **kwargs):
-        super(KidpSpider, self).__init__(*args, **kwargs)
+        super(CnspcomSpider, self).__init__(*args, **kwargs)
         create_output_directory(self.output_dir)  # Create output directory if it doesn't exist
 
 
@@ -70,7 +72,7 @@ class KidpSpider(scrapy.Spider):
             url=self.start_urls[0],
             meta={
                 "playwright": True,
-                "playwright_include_page": True,
+                "playwright_include_page": True
             })
 
 
@@ -101,7 +103,6 @@ class KidpSpider(scrapy.Spider):
                         "playwright": True,
                         "playwright_include_page": True,
                         "playwright_page_methods": [
-                            # PageMethod("wait_for_selector", "td.left a"),
                             # PageMethod("click", title_selector),  # 클릭 이벤트
                             # PageMethod("wait_for_load_state", "domcontentloaded"),  # 페이지 로드 대기
                             # PageMethod("wait_for_timeout", 60000),  # 60초 대기
@@ -271,3 +272,5 @@ class KidpSpider(scrapy.Spider):
         self.logger.error(f"Error: {failure.value}")
         self.logger.error(f"Meta data: {failure.request.meta}")
         await page.close()
+        
+        
