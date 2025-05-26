@@ -1,0 +1,149 @@
+site_code,site_name,start_url,page_url
+kotra,대한무역투자진흥공사,https://www.kotra.or.kr/subList/20000005958?tabid=1092,JavaScript pagination
+ripc,지역지식재산센터,https://pms.ripc.org/www/portal/notice/boardList.do?boardCategoryCode=BD40000,https://pms.ripc.org/www/portal/notice/boardList.do?boardCategoryCode=BD40000&page={next_page}
+btp,부산테크노파크,https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013,https://www.btp.or.kr/kor/CMS/Board/Board.do?robot=Y&mCode=MN013&page={next_page}
+itp,인천테크노파크,https://itp.or.kr/intro.asp?tmid=13,JavaScript pagination
+ttp,한국테크노파크진흥회,http://www.technopark.kr/businessboard,http://www.technopark.kr/index.php?mid=businessboard&page={next_page}
+gbtp,경북테크노파크 - 사업공고,https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021,https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021&pageIndex={next_page}
+gtp,(재)경기테크노파크,https://pms.gtp.or.kr/web/business/webBusinessList.do,JavaScript pagination
+seoultp,(재)서울테크노파크,https://www.seoultp.or.kr/user/nd19746.do,JavaScript pagination
+sjtp,(재)세종테크노파크,https://sjtp.or.kr/bbs/board.php?bo_table=business01,https://sjtp.or.kr/bbs/board.php?bo_table=business01&page={next_page}
+kita,한국무역협회,https://www.kita.net/asocBiz/asocBiz/asocBizOngoingList.do,JavaScript pagination
+busanit,부산정보산업진흥원,http://www.busanit.or.kr/board/list.asp?bcode=notice,http://www.busanit.or.kr/board/list.asp?bcode=notice&sword=&search_txt=&ipage={next_page}
+jbba,전북특별자치도경제통상진흥원,https://www.jbba.kr/bbs/board.php?bo_table=sub01_09,https://www.jbba.kr/bbs/board.php?bo_table=sub01_09&page={next_page}
+snipBottom,성남산업진흥원,https://www.snip.or.kr/SNIP/contents/Business1.do,JavaScript pagination
+jbtp,전북테크노파크,https://www.jbtp.or.kr/board/list.jbtp?boardId=BBS_0000006&menuCd=DOM_000000102001000000&contentsSid=9&cpath=,https://www.jbtp.or.kr/board/list.jbtp?boardId=BBS_0000006&menuCd=DOM_000000102001000000&paging=ok&gubun=&searchType=&keyword=&pageNo={next_page}
+dip,대구디지털혁신진흥원,https://www.dip.or.kr/home/notice/businessbbs/boardList.ubs?fboardcd=business,JavaScript pagination
+gwbaInfo,강원특별자치도경제진흥원,https://www.gwep.or.kr/bbs/board.php?bo_table=gw_sub21,https://www.gwep.or.kr/bbs/board.php?bo_table=gw_sub21&page={next_page}
+djbaInfo,대전일자리경제진흥원,https://www.djbea.or.kr/pms/an/an_0101/list?,https://www.djbea.or.kr/pms/an/an_0101/list?cPage={next_page}&BIZ_PBNC_NM=&PBNC_BEGDTM=&PBNC_ENDDTM=&RCIP_BEGDTM=&RCIP_ENDDTM=&IDX=0
+gitp,광주테크노파크,https://www.gjtp.or.kr/home/business.cs,JavaScript pagination
+kocca,한국콘텐츠진흥원,https://www.kocca.kr/kocca/pims/list.do?menuNo=204104,JavaScript pagination
+ctp,충남테크노파크,https://ctp.or.kr/business/data.do,JavaScript pagination
+debc,장애인기업종합지원센터,https://www.debc.or.kr/bbs/board.php?bo_table=s2_2,https://www.debc.or.kr/bbs/board.php?bo_table=s2_2&page={next_page}
+nipa,정보통신산업진흥원,https://www.nipa.kr/,JavaScript pagination
+bizbc,부천산업진흥원,https://bizbc.or.kr/kor/contents/BC0101010000.do,JavaScript pagination
+dipa,용인시산업진흥원,http://dipa.or.kr/information/businessnotice/,JavaScript pagination
+pms,한국방송통신전파진흥원 사업관리시스템,https://pms.kca.kr:4433/board/boardList.do?sysType=KCA&bbsTc=BBS0001,JavaScript pagination
+gitct,광주정보문화산업진흥원,https://www.gicon.or.kr/board.es?mid=a10204000000&bid=0003,JavaScript pagination
+cba,충청북도기업진흥원,https://www.cba.ne.kr/home/sub.php?menukey=172,JavaScript pagination
+kiat,KIAT 한국산업기술진흥원,https://www.kiat.or.kr/front/board/boardContentsListPage.do?board_id=90&MenuId=b159c9dac684471b87256f1e25404f5e,JavaScript pagination
+ptp,포항테크노파크,https://www.ptp.or.kr/main/board/index.do?menu_idx=113&manage_idx=2,JavaScript pagination
+jcia,전남정보문화산업진흥원,https://jcia.or.kr/cf/information/notice/business.do,JavaScript pagination
+daejeontp,대전테크노파크,https://www.djtp.or.kr/pbanc?mid=a20101000000,JavaScript pagination
+cceiSeoul,서울창조경제혁신센터,https://ccei.creativekorea.or.kr/seoul/allim/allim,JavaScript pagination
+fact,한국농업기술진흥원,https://www.koat.or.kr/board/business/list.do,JavaScript pagination
+keiti,한국환경산업기술원,https://www.keiti.re.kr/site/keiti/ex/board/List.do?cbIdx=277&searchExt1=24000100,JavaScript pagination
+kosmes,중소벤처기업진흥공단,https://www.kosmes.or.kr/nsh/SH/NTS/SHNTS001M0.do,JavaScript pagination
+cceiJeonbuk,전북창조경제혁신센터,https://ccei.creativekorea.or.kr/jeonbuk/custom/notice_list.do?&page=1,https://ccei.creativekorea.or.kr/jeonbuk/custom/notice_list.do?&page={next_page}
+cceiGangwon,강원창조경제혁신센터,https://ccei.creativekorea.or.kr/gangwon/custom/notice_list.do?,https://ccei.creativekorea.or.kr/gangwon/custom/notice_list.do?&page={next_page}
+gimc,강원정보문화산업진흥원,https://www.gica.or.kr/Home/H40000/H40100/boardList,JavaScript pagination
+jejutp,제주테크노파크,https://www.jejutp.or.kr/board/business,JavaScript pagination
+cbtp,충북테크노파크,https://www.cbtp.or.kr/index.php?control=bbs&board_id=saup_notice&lm_uid=387,JavaScript pagination
+cceiBusan,부산창조경제혁신센터,https://ccei.creativekorea.or.kr/busan/custom/notice_list.do?,https://ccei.creativekorea.or.kr/busan/custom/notice_list.do?&page={next_page}
+gdtp,경기대진테크노파크,https://www.gdtp.or.kr/board/notice,JavaScript pagination
+innopolis,연구개발특구진흥재단,https://www.innopolis.or.kr/newBusiness?menuId=MENU01028,JavaScript pagination
+geri,구미전자정보기술원,https://geri.re.kr/html/board_list.asp?board_id=business,JavaScript pagination
+cceiJeonnam,전남창조경제혁신센터,https://ccei.creativekorea.or.kr/jeonnam/custom/notice_list.do?,https://ccei.creativekorea.or.kr/jeonnam/custom/notice_list.do?&page={next_page}
+kisa,한국인터넷진흥원,https://www.kisa.or.kr/401,JavaScript pagination
+semas,소상공인시장진흥공단 - 지원사업,https://www.semas.or.kr/web/board/webBoardList.kmdc?bCd=2001&pNm=BOA0121,JavaScript pagination
+gcon,경기콘텐츠진흥원,https://www.gcon.or.kr/gcon/business/gconNotice/list.do?menuNo=200061,JavaScript pagination
+cceiSejong,세종창조경제혁신센터,https://ccei.creativekorea.or.kr/sejong/custom/notice_list.do?,https://ccei.creativekorea.or.kr/sejong/custom/notice_list.do?&page={next_page}
+sjria,세종지역산업진흥원,https://sj.riia.or.kr/board/businessAnnouncement,JavaScript pagination
+jejufc,제주영상 문화산업진흥원,https://jejufc.onlinekoreahrd.kr/studyCenter/bbs.php?boardCode=1,https://jejufc.onlinekoreahrd.kr/studyCenter/bbs.php?boardCode=1&page={next_page}
+jif,(재)전북바이오융합산업진흥원,https://www.jif.re.kr/board/list.do?boardUUID=53473d307cb77a53017cb7e09b8e0003&menuUUID=53473d307cb7118c017cb71940970029,JavaScript pagination
+wmit,원주의료기기테크노밸리,http://wmit.or.kr/announce/businessAnnounceList.do,JavaScript pagination
+ctia,충남정보문화산업진흥원,https://www.ctia.kr/home/board/brdList.do?menu_cd=000166,JavaScript pagination
+gdc,광주디자인진흥원,https://www.gdc.or.kr/board.do?S=S01&M=0401000000&b_code=0001,JavaScript pagination
+ayventure,안양산업진흥원,https://www.ayventure.net/bbs/board.do?id=382&menuId=855#1,JavaScript pagination
+htdream,보건의료기술종합정보시스템,https://www.htdream.kr/main/pubAmt/PubAmtList.do?searchCondition=,JavaScript pagination
+kidp,한국디자인진흥원,https://kidp.or.kr/?menuno=1202,JavaScript pagination
+kicox,한국산업단지공단,https://www.kicox.or.kr/user/bbs/BD_selectBbsList.do?q_bbsCode=1016,JavaScript pagination
+cceiGyeongbuk,경북창조경제혁신센터,https://ccei.creativekorea.or.kr/gyeongbuk/custom/notice_list.do?,https://ccei.creativekorea.or.kr/gyeongbuk/custom/notice_list.do?&page={next_page}
+kitech,한국생산기술연구원,https://www.kitech.re.kr/research/page1-1.php,JavaScript pagination
+cceiGwangju,광주창조경제혁신센터,https://ccei.creativekorea.or.kr/gwangju/custom/notice_list.do?,https://ccei.creativekorea.or.kr/gwangju/custom/notice_list.do?&page={next_page}
+uepa,울산경제일자리진흥원,https://www.ubpi.or.kr/sub/?mcode=0403010000,JavaScript pagination
+cceiChungnam,충남창조경제혁신센터,https://ccei.creativekorea.or.kr/chungnam/custom/notice_list.do?&sPtime=all&page=1,https://ccei.creativekorea.or.kr/chungnam/custom/notice_list.do?&sPtime=all&page={next_page}
+kimst,해양수산과학기술진흥원,https://www.kimst.re.kr/u/news/inform_01/pjtAnuc.do,JavaScript pagination
+atcenter,한국농수산식품유통공사,https://www.at.or.kr/article/apko364000/list.action,JavaScript pagination
+cceiUlsan,울산창조경제혁신센터,https://ccei.creativekorea.or.kr/ulsan/custom/notice_list.do?,https://ccei.creativekorea.or.kr/ulsan/custom/notice_list.do?&page={next_page}
+gipa,고양산업진흥원,https://www.gipa.or.kr/apply/01.php?cate=1,https://www.gipa.or.kr/apply/01.php?cate=1&page={next_page}
+jica,전주정보문화산업진흥원,https://www.jica.or.kr/2025/inner.php?sMenu=A1000,https://www.jica.or.kr/2025/inner.php?sMenu=A1000&page={next_page}
+smc,재단법인서울경제진흥원 글로벌마케팅센터,https://smc.sba.kr/Pages/Information/Notice.aspx,JavaScript pagination
+cceiIncheon,인천창조경제혁신센터,https://ccei.creativekorea.or.kr/incheon/custom/notice_list.do?,https://ccei.creativekorea.or.kr/incheon/custom/notice_list.do?&page={next_page}
+cceiDaejeon,대전창조경제혁신센터,https://ccei.creativekorea.or.kr/daejeon/custom/notice_list.do?&sPtime=all&page=1,https://ccei.creativekorea.or.kr/daejeon/custom/notice_list.do?&sPtime=all&page={next_page}
+dicia,대전정보문화산업진흥원,https://www.dicia.or.kr/sub.do;jsessionid=2A64958CBD7EF4D3110AFE9D2BF94252.tomcat?menuIdx=MENU_000000000000055,JavaScript pagination
+cbf,(재)춘천바이오산업진흥원,http://www.cbf.or.kr/twb_bbs/bbs_list.php?bcd=01_05_01_00_00,http://www.cbf.or.kr/twb_bbs/bbs_list.php?bcd=01_05_01_00_00&page={next_page}
+kiria,한국로봇산업진흥원,https://kiria.org/portal/info/portalInfoNotiList.do;jsessionid=520472C1F39076F8FF64859FDA134332,JavaScript pagination
+gsif,강릉과학산업진흥원,https://mybiz.gsipa.or.kr/gsipa/bbs_list.do?code=sub03a&keyvalue=sub03,JavaScript pagination
+djbaAnnc,대전일자리경제진흥원 - 유관기관,https://www.djbea.or.kr/pms/st/st_0205/list,https://www.djbea.or.kr/pms/st/st_0205/list?cPage={next_page}
+cceiGyeongnam,경남창조경제혁신센터,https://ccei.creativekorea.or.kr/gyeongnam/allim/allim_list.do?div_code=1,https://ccei.creativekorea.or.kr/gyeongnam/allim/allim_list.do?div_code=1&page={next_page}
+gimb,환동해산업연구원,http://mire.re.kr/sub4_4.php?PHPSESSID=e90e1c5af211a879b62c46091ad71dce,http://mire.re.kr/sub4_4.php?PHPSESSID=e90e1c5af211a879b62c46091ad71dce&page={next_page}
+cceiChungbuk,충북창조경제혁신센터,https://ccei.creativekorea.or.kr/chungbuk/custom/notice_list.do?,https://ccei.creativekorea.or.kr/chungbuk/custom/notice_list.do?&page={next_page}
+gepaGwangju,광주광역시 기업지원시스템,http://203.251.57.106:82/jwsys_site/gepa/main.html,JavaScript pagination
+dcb,(재)부산디자인진흥원,https://www.dcb.or.kr/01_news/?mcode=0401010000,JavaScript pagination
+cceiGyeonggi,경기창조경제혁신센터,https://ccei.creativekorea.or.kr/gyeonggi/custom/notice_list.do?&sPtime=all&page=1,https://ccei.creativekorea.or.kr/gyeonggi/custom/notice_list.do?&sPtime=all&page={next_page}
+jbf,(재)전남바이오진흥원,http://www.jbf.kr/main/board.action?cmsid=101050200000,JavaScript pagination
+cepaMarket,충남경제진흥원-공지사항,https://www.cepa.or.kr/notice/notice.do?pm=6&ms=32,JavaScript pagination
+cheongjucci,청주상공회의소,https://cheongjucci.korcham.net/front/board/boardContentsListPage.do?boardId=10701&menuId=1561,JavaScript pagination
+gib,경북바이오산업연구원,https://gib.re.kr/module/bbs/list.php?mid=/news/notice,https://gib.re.kr/module/bbs/list.php?mid=/news/notice&page={next_page}
+gbtpinfo,경북테크노파크 - 일반공고,https://gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000023,https://gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000023&pageIndex={next_page}
+dgdc,대구경북디자인진흥원,https://dgdp.or.kr/notice/public,JavaScript pagination
+cbcci,충남북부상공회의소,https://cbcci.korcham.net/front/board/boardContentsListPage.do?boardId=10413&menuId=3382,JavaScript pagination
+exportvoucher,수출지원기반활용사업,https://www.exportvoucher.com/portal/board/boardList?bbs_id=1,https://www.exportvoucher.com/portal/board/boardList?bbs_id=1&page={next_page}
+dgmif,대구경북첨단의료산업진흥재단,https://www.kmedihub.re.kr/index.do?menu_id=00000063,JavaScript pagination
+jepa,전라남도중소기업일자리경제진흥원-공지사항,https://www.jepa.kr/bbs/?b_id=notice&site=new_jepa&mn=426,https://www.jepa.kr/bbs/?b_id=notice&site=new_jepa&mn=426&page={next_page}
+smtech,중소기업 기술개발사업 종합관리시스템,https://www.smtech.go.kr/front/ifg/no/notice02,JavaScript pagination
+kca,한국방송통신전파진흥원,https://www.kca.kr/boardList.do?boardId=NOTICE&pageId=www47,JavaScript pagination
+itech,한국산업기술기획평가원,https://srome.keit.re.kr/srome/biz/perform/opnnPrpsl/retrieveTaskAnncmListView.do?prgmId=XPG201040000&rcveStatus=A,JavaScript pagination
+cceiJeju,제주창조경제혁신센터,https://ccei.creativekorea.or.kr/jeju/custom/notice_list.do?,https://ccei.creativekorea.or.kr/jeju/custom/notice_list.do?&page={next_page}
+kdata,한국데이터산업진흥원,https://www.kdata.or.kr/kr/board/notice_01/boardList.do,JavaScript pagination
+koema,한국전기산업진흥회,https://www.koema.or.kr/koema/report/total_notice.html,JavaScript pagination
+cnsp,충남경제진흥원-사업공고,https://www.cnsp.or.kr/project/list.do,JavaScript pagination
+jbsos,전북소상공인광역지원센터((재)전북특별자치도경제통상진흥원),https://www.jbsos.or.kr/bbs/board.php?bo_table=s_sub04_01,https://www.jbsos.or.kr/bbs/board.php?bo_table=s_sub04_01&page={next_page}
+iris,범부처통합연구지원시스템(한국과학기술기획평가원),https://www.iris.go.kr/contents/retrieveBsnsAncmBtinSituListView.do,JavaScript pagination
+seoulRndb,재단법인서울경제진흥원,https://seoul.rnbd.kr/client/c030100/c030100_00.jsp,JavaScript pagination
+utp,울산테크노파크,https://www.utp.or.kr/include/contents.php?mnuno=M0000018&menu_group=1&sno=0102,https://www.utp.or.kr/include/contents.php?mnuno=M0000018&menu_group=1&sno=0102&page={next_page}
+cceiPohang,포항창조경제혁신센터,https://ccei.creativekorea.or.kr/pohang/custom/notice_list.do?&sPtime=my&page=1,https://ccei.creativekorea.or.kr/pohang/custom/notice_list.do?&sPtime=my&page={next_page}
+seoulsbdc,서울시 자영업지원센터,https://www.seoulsbdc.or.kr/bs/BS_LIST.do?boardCd=B061,JavaScript pagination
+sbizsup,소상공인시장진흥공단 - 공지사항,https://semas.or.kr/web/board/webBoardList.kmdc?bCd=1&pNm=BOA0101,JavaScript pagination
+gcube,경북문화재단 콘텐츠진흥원,https://gcube.or.kr:1021/home/sub1/sub1.asp,JavaScript pagination
+cceiDaeGu,대구창조경제혁신센터,https://ccei.creativekorea.or.kr/daegu/custom/notice_list.do?,https://ccei.creativekorea.or.kr/daegu/custom/notice_list.do?&page={next_page}
+pohangcci,포항상공회의소,http://pohangcci.korcham.net/front/board/boardContentsListPage.do?boardId=10275&menuId=1440,JavaScript pagination
+gyeongsancci,경산상공회의소,http://gyeongsancci.korcham.net/front/board/boardContentsListPage.do?boardId=10334&menuId=1905,JavaScript pagination
+gigca,광주미래차모빌리티진흥원,https://gama.or.kr/bbs/?b_id=green_notice&site=basic&mn=1136,https://gama.or.kr/bbs/?b_id=green_notice&site=basic&mn=1136&page={next_page}
+scci,순천상공회의소,https://scci.korcham.net/front/board/boardContentsListPage.do?boardId=10734&menuId=2796,JavaScript pagination
+yeongcheoncci,영천상공회의소,http://yeongcheoncci.korcham.net/front/board/boardContentsListPage.do?boardId=10342&menuId=5170,JavaScript pagination
+win,대·중소기업·농어업협력재단,https://www.win-win.or.kr/kr/board/notice/boardList.do,JavaScript pagination
+bucheoncci,부천상공회의소,https://bucheoncci.korcham.net/front/board/boardContentsListPage.do?boardId=10135&menuId=410,JavaScript pagination
+jccia,전북특별자치도콘텐츠융합진흥원,https://www.jcon.or.kr/board/list.php?bbsId=BBSMSTR_000000000001&pageId=C000000016,https://www.jcon.or.kr/board/list.php?bbsId=BBSMSTR_000000000001&pageId=C000000016&page={next_page}
+anseongcci,안성상공회의소,https://anseongcci.korcham.net/front/board/boardContentsListPage.do?boardId=10123&menuId=2962,JavaScript pagination
+cceiBitgaram,빛가람창조경제혁신센터,https://ccei.creativekorea.or.kr/bitgaram/custom/notice_list.do?,https://ccei.creativekorea.or.kr/bitgaram/custom/notice_list.do?&page={next_page}
+gecci,경기동부상공회의소,https://gecci.korcham.net/front/board/boardContentsListPage.do?boardId=10756&menuId=1816,JavaScript pagination
+gimhaecci,김해상공회의소,https://gimhaecci.korcham.net/front/board/boardContentsListPage.do?boardId=10471&menuId=2330,JavaScript pagination
+gwba,강원지역산업진흥원,https://gw.riia.or.kr/board/notice,JavaScript pagination
+koita,한국산업기술진흥협회,https://www.koita.or.kr/board/commBoardLCRnDList.do,JavaScript pagination
+shiheungcci,시흥상공회의소,https://shiheungcci.korcham.net/front/board/boardContentsListPage.do?boardId=10497&menuId=2841,JavaScript pagination
+gumicci,구미상공회의소,https://gumicci.korcham.net/front/board/boardContentsListPage.do?boardId=10318&menuId=2103,JavaScript pagination
+yemi,영월산업진흥원,https://mybiz.yipa.or.kr/yipa/bbs_list.do?code=sub01b&keyvalue=sub01,JavaScript pagination
+dangjincci,당진상공회의소,https://dangjincci.korcham.net/front/board/boardContentsListPage.do?boardId=10802&menuId=2377,JavaScript pagination
+jntp,전남테크노파크,https://www.jntp.or.kr/base/board/list?boardManagementNo=16&menuLevel=2&menuNo=60,JavaScript pagination
+wonjucci,원주상공회의소,https://wonjucci.korcham.net/front/board/boardContentsListPage.do?boardId=10598&menuId=832,JavaScript pagination
+chungjucci,충주상공회의소,https://chungjucci.korcham.net/front/board/boardContentsListPage.do?boardId=10259&menuId=1051,JavaScript pagination
+pyeongtaekcci,평택상공회의소,https://pyeongtaekcci.korcham.net/front/board/boardContentsListPage.do?boardId=10160&menuId=1318,JavaScript pagination
+gncci,경기북부상공회의소,http://www.gncci.or.kr/front/board/boardContentsListPage.do?boardId=10146&menuId=5103,JavaScript pagination
+kunpocci,군포상공회의소,https://kunpocci.korcham.net/front/board/boardContentsListPage.do?boardId=10244&menuId=2201,JavaScript pagination
+gimcheoncci,김천상공회의소,https://gimcheoncci.korcham.net/front/board/boardContentsListPage.do?boardId=10238&menuId=2245,JavaScript pagination
+rechallenge,재도전종합지원센터(중소벤처기업진흥공단 재도약성장처),https://www.rechallenge.or.kr/planweb/board/list.9is?contentUid=402880955861e980015861fbf1aa0040&boardUid=40288095586a64e001586c59efce00f7&contentUid=402880955861e980015861fbf1aa0040&subPath=,JavaScript pagination
+knrec,한국에너지공단 신∙재생에너지센터,https://www.knrec.or.kr/biz/pds/businoti/list.do,JavaScript pagination
+changwon,창원특례시(창원시),https://www.changwon.go.kr/cwportal/10310/10429/10430.web,JavaScript pagination
+osancci,오산상공회의소,https://osancci.korcham.net/front/board/boardContentsListPage.do?boardId=10795&menuId=5224,JavaScript pagination
+uiwangcci,의왕상공회의소,https://uiwangcci.korcham.net/front/board/boardContentsListPage.do?boardId=11096&menuId=3747,JavaScript pagination
+mokpocci,목포상공회의소,https://mokpocci.korcham.net/front/board/boardContentsListPage.do?boardId=10704&menuId=2465,JavaScript pagination
+gangneungcci,강릉상공회의소,https://gangneungcci.korcham.net/front/board/boardContentsListPage.do?boardId=10559&menuId=9986,JavaScript pagination
+gycci,고양상공회의소,http://www.gycci.or.kr/front/board/boardContentsListPage.do?boardId=10767&menuId=1980,JavaScript pagination
+gmcci,광명상공회의소,https://gmcci.korcham.net/front/board/boardContentsListPage.do?boardId=10599&menuId=2022,JavaScript pagination
+gwangyangcci,광양상공회의소,https://gwangyangcci.korcham.net/front/board/boardContentsListPage.do?boardId=10836&menuId=2059,JavaScript pagination
+cnfund,충남경제진흥원 중소기업 자금시스템,https://www.cnfund.kr/info/list.do?menuSeq=notice,JavaScript pagination
+exportcenter,중소기업수출지원센터(중소벤처기업부),https://www.smes.go.kr/exportcenter/information/notice/list.do,JavaScript pagination
+BIZ,산업통상자원부공시로 보이나 정확한 분류기준은 알기 어려움,,No URL provided
+chuncheoncci,춘천상공회의소,http://chuncheoncci.korcham.net/front/board/boardContentsListPage.do?boardId=10518&menuId=757,JavaScript pagination

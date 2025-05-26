@@ -1,0 +1,17 @@
+site_code,site_name,start_url,page_url
+kotra,대한무역투자진흥공사,https://www.kotra.or.kr/subList/20000005958?tabid=1092,JavaScript pagination
+ripc,지역지식재산센터,https://pms.ripc.org/www/portal/notice/boardList.do?boardCategoryCode=BD40000,https://pms.ripc.org/www/portal/notice/boardList.do?boardCategoryCode=BD40000&page={next_page}
+btp,부산테크노파크,https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013,https://www.btp.or.kr/kor/CMS/Board/Board.do?robot=Y&mCode=MN013&page={next_page}
+itp,인천테크노파크,https://itp.or.kr/intro.asp?tmid=13,JavaScript pagination
+ttp,한국테크노파크진흥회,http://www.technopark.kr/businessboard,http://www.technopark.kr/index.php?mid=businessboard&page={next_page}
+gbtp,경북테크노파크 - 사업공고,https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021,https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021&pageIndex={next_page}
+gtp,(재)경기테크노파크,https://pms.gtp.or.kr/web/business/webBusinessList.do,JavaScript pagination
+seoultp,(재)서울테크노파크,https://www.seoultp.or.kr/user/nd19746.do,JavaScript pagination
+sjtp,(재)세종테크노파크,https://sjtp.or.kr/bbs/board.php?bo_table=business01,https://sjtp.or.kr/bbs/board.php?bo_table=business01&page={next_page}
+kita,한국무역협회,https://www.kita.net/asocBiz/asocBiz/asocBizOngoingList.do,JavaScript pagination
+busanit,부산정보산업진흥원,http://www.busanit.or.kr/board/list.asp?bcode=notice,http://www.busanit.or.kr/board/list.asp?bcode=notice&sword=&search_txt=&ipage={next_page}
+jbba,전북특별자치도경제통상진흥원,https://www.jbba.kr/bbs/board.php?bo_table=sub01_09,https://www.jbba.kr/bbs/board.php?bo_table=sub01_09&page={next_page}
+snipBottom,성남산업진흥원,https://www.snip.or.kr/SNIP/contents/Business1.do,JavaScript pagination
+jbtp,전북테크노파크,https://www.jbtp.or.kr/board/list.jbtp?boardId=BBS_0000006&menuCd=DOM_000000102001000000&contentsSid=9&cpath=,https://www.jbtp.or.kr/board/list.jbtp?boardId=BBS_0000006&menuCd=DOM_000000102001000000&paging=ok&gubun=&searchType=&keyword=&pageNo={next_page}
+dip,대구디지털혁신진흥원,https://www.dip.or.kr/home/notice/businessbbs/boardList.ubs?fboardcd=business,JavaScript pagination
+gwbaInfo,강원특별자치도경제진흥원,https://www.gwep.or.kr/bbs/board.php?bo_table=gw_sub21,https://www.gwep.or.kr/bbs/board.php?bo_table=gw_sub21&page={next_page}
