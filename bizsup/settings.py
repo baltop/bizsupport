@@ -109,7 +109,7 @@ DOWNLOAD_HANDLERS = {
 HTTPCACHE_ENABLED=False
 
 PLAYWRIGHT_LAUNCH_OPTIONS = {
-    "headless": False,
+    "headless": True,
     "timeout": 120 * 1000,  # 100 seconds
 }
 
