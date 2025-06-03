@@ -27,13 +27,13 @@ with open(file_path, mode='r', encoding='utf-8') as file:
     reader = csv.reader(file)
     data = [row for row in reader]
     for index, row in enumerate(data):
-        if index <= 68:
+        if index <= 60:
             continue
-        if index > 88:
+        if index > 81:
             break
         print(row[0], row[2])  # Replace 0 with the index of the desired field (e.g., site_code column index)
 
-        com = (f"claude --dangerously-skip-permissions -p '{row[0]}의 URL {row[2]}에 playwright mcp를 이용같은 접근한다. url은 item들의 목록을 표시하는 list page 이다. 각 item의 link를 클릭하면 item 상세 페이지로 이동한다. "
+        com = (f"~/.claude/local/claude --dangerously-skip-permissions -p '{row[0]}의 URL {row[2]}에 playwright mcp를 이용같은 접근한다. url은 item들의 목록을 표시하는 list page 이다. 각 item의 link를 클릭하면 item 상세 페이지로 이동한다. "
                 " scrapy-playwright  spider코드에서 링크를 클릭하기 위해 다음 샘플과 같은 item 목록 링크의 css selector와 텍스트를 가져오기 위한 "
                 " css selector가 판별되어야 한다. ￦n "
                 " 샘플 :     items_selector = \"table.bbs-list tbody tr\" \n"

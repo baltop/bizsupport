@@ -186,4 +186,6 @@ page/
 
 items/
 
+conf/
 
+node_modules/

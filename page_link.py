@@ -27,13 +27,13 @@ with open(file_path, mode='r', encoding='utf-8') as file:
     reader = csv.reader(file)
     data = [row for row in reader]
     for index, row in enumerate(data):
-        if index <= 68:
+        if index <= 0:
             continue
-        if index > 88:
+        if index > 40:
             break
         print(row[0], row[2])  # Replace 0 with the index of the desired field (e.g., site_code column index)
 
-        com = (f"claude --dangerously-skip-permissions -p '{row[0]}의 URL {row[2]}에 playwright를 이용해서 접근하여 " 
+        com = (f"~/.claude/local/claude --dangerously-skip-permissions -p '{row[0]}의 URL {row[2]}에 playwright를 이용해서 접근하여 " 
             " pagination bar의 링크를 찾아 3 혹은 4 페이지에 이동한 후 location.href를 이용하여 page index의 키이름을 확인해서 " 
             " 다음과 같이 json 형식으로 응답해줘. {{\"page_url\" : \"https://www.anony.or.kr/elsl?dlsl=4&pageindex={{next_page}}\"}} " 
             " key value에서 value는 {{next_page}}로 표시해줘. 사이트코드를 파일명으로 확장자는  .json으로 파일트 만들어서 ./page 아래에 저장해줘.' ")
