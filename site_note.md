@@ -6,7 +6,9 @@ cnsp     -    ok
 seoultp.py   -   javascript 인경우 파라미터에서 doc id를 꺼내서 이미 알고 있는 url에 파라미터로 대입하여 디테일 페이지로 이동.
 snipBottom.py    -     form data 이용해서 post 로 리퀘스트 보내는 샘플.  첫번째 디테일 페이지도 post 이고 다음 pagination도 post 방식으로 하고 있음.
 itp.py               page 안에서 직접 playwright를 사용하는 샘플. 실제 작동은 안함.
-
+jejutp.py     vue 로 만들어진 dynimic page. 에러 해결 안됨.
+cbtp.py      base.py 상속 받는 방식으로 수정. 잘됨.
+gdtp.py       file download가 안됨. 만들어진 items 의 txt 내용도 엉망임.
 
 
 -----

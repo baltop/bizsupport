@@ -6,8 +6,8 @@ import sys
 import time
 
 
-# 이 스크립트는 사이트 코드와 URL이 포함된 CSV 파일을 읽고, 셸에서 실행할 명령어를 생성하여 실행합니다.
-# 이 명령어는 Playwright를 사용해 웹 페이지의 페이지네이션 링크를 찾기 위해 설계되었습니다.
+# 이 스크립트는 사이트 코드와 URL이 포함된 CSV 파일을 읽고, Claude Code에 최적화된 명령어를 생성하여 실행합니다.
+# 이 명령어는 웹 페이지의 CSS selector를 추출하기 위해 설계되었습니다.
 
 def execute_bash_command(command):
     try:
@@ -33,29 +33,34 @@ with open(file_path, mode='r', encoding='utf-8') as file:
             break
         print(row[0], row[2])  # Replace 0 with the index of the desired field (e.g., site_code column index)
 
-        com = (f"~/.claude/local/claude --dangerously-skip-permissions -p '{row[0]}의 URL {row[2]}에 playwright mcp를 이용같은 접근한다. url은 item들의 목록을 표시하는 list page 이다. 각 item의 link를 클릭하면 item 상세 페이지로 이동한다. "
-                " scrapy-playwright  spider코드에서 링크를 클릭하기 위해 다음 샘플과 같은 item 목록 링크의 css selector와 텍스트를 가져오기 위한 "
-                " css selector가 판별되어야 한다. ￦n "
-                " 샘플 :     items_selector = \"table.bbs-list tbody tr\" \n"
-                "            item_title_selector = \"table.bbs-list tbody tr td.align_left a div span::text\" \n"
-                "            click_selector = \"table.bbs-list tbody tr td.align_left a\" \n" 
-                " 실제로 click_selector를 클릭하면 item의 상세 페이지로 이동해야 한다. "
-                " 이동한 후에 item 상세페이지의 url을 저장한다. \n"
-                " 샘플      details_page_url = \"/board_detail?id=829\" \n"
-                " item 상세페이지에서 본문을 저장하기 위해 공고 를 표시하는 css selector를 추출해야 한다. item 상세페이지에는 대개 첨부파일 링크가 있는데 "
-                " 그부분을 클릭해서 파일을 다운로드 받을 수 있는 첨부파일 링크의 css selector도 추출해야 한다. 아래 샘플을 참고 할 것. \n"
-                " 샘플      details_page_main_content_selector = \"div#content\" \n"
-                "            attachment_links_selector = \"table.bbs-view tbody tr td ul li a\" \n"
-                " 추출된 내용은 ./items/사이트코드.txt 형식으로 저장한다. \n"
-                " 파일 내용은 다음과 같은 형식으로 한다. \n"
-                "--- 파일 저장 샘플 \n"
-                "items_selector = \"table.bbs-list tbody tr\" \n"
-                "item_title_selector = \"table.bbs-list tbody tr td.align_left a div span::text\" \n"
-                "click_selector = \"table.bbs-list tbody tr td.align_left a\" \n"
-                "details_page_url = \"/board_detail?id=829\" \n"
-                "details_page_main_content_selector = \"div#content\" \n"
-                "attachment_links_selector = \"table.bbs-view tbody tr td ul li a\" \n"
-                "--- \n'" )
+        com = (f"~/.claude/local/claude --dangerously-skip-permissions -p '사이트코드: {row[0]}, URL: {row[2]}에 접근하여 웹페이지를 분석하라. "
+                "먼저 WebFetch tool을 사용하여 HTML을 가져와서 분석하고, 필요시에만 playwright MCP를 사용하라. "
+                "이 URL은 공고/게시물 목록을 보여주는 list page이다. "
+                "각 게시물의 링크를 클릭하면 상세 페이지로 이동한다. "
+                "다음 작업을 순서대로 수행하라: "
+                "1. HTML 구조 분석 "
+                "2. CSS selector 추출 (다음 규칙 준수): "
+                "   - class/id 기반 selector 사용 (예: table.tbl1, div.content) "
+                "   - 속성 selector 금지 (예: table[aria-label], a[href*=notice]) "
+                "   - nth-child 사용 금지 "
+                "   - 대괄호 포함 selector 금지 "
+                "3. 추출할 selector들: "
+                "   - items_selector: 게시물 목록의 각 행 "
+                "   - item_title_selector: 게시물 제목 텍스트 "
+                "   - click_selector: 클릭할 링크 "
+                "   - details_page_url: 상세페이지 URL 예시 "
+                "   - details_page_main_content_selector: 상세페이지 본문 "
+                "   - attachment_links_selector: 첨부파일 링크 "
+                "4. 사이트 유형 판단: JavaScript 필요시 scrapy-playwright, 아니면 scrapy만 "
+                "5. 결과를 /home/baltop/work/bizsupport/bizsup/items/{row[0]}.txt에 저장 "
+                "파일 형식: "
+                "items_selector = \"table.bbs-list tbody tr\" "
+                "item_title_selector = \"td.title a::text\" "
+                "click_selector = \"td.title a\" "
+                "details_page_url = \"/board_detail?id=829\" "
+                "details_page_main_content_selector = \"div.content\" "
+                "attachment_links_selector = \"div.attach a\" "
+                "javascript site = need scrapy-playwright or url link site = need scrapy only'")
         
 
         result = execute_bash_command(com)  # Example command    
