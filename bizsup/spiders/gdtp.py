@@ -164,74 +164,54 @@ URL: {response.url}
             
             self.logger.info(f"Saved markdown file: {md_filename}")
             
-            # 첨부파일 처리 - 여러 패턴 시도
-            attachment_selectors = [
-                "p a[href*='javascript:file_download']",
-                "a[href*='download']", 
-                "a[href*='.pdf']",
-                "a[href*='.hwp']",
-                "a[href*='.zip']",
-                "a[href*='.doc']"
-            ]
+            # 첨부파일 처리 - JavaScript 다운로드 함수 사용
+            js_download_links = response.css("a[href*='javascript:file_download']")
             
-            attachment_links = []
-            for selector in attachment_selectors:
-                links = response.css(selector)
-                if links:
-                    attachment_links.extend(links)
-            
-            if attachment_links:
+            if js_download_links:
                 attachment_dir = f"{self.output_dir}/{safe_filename}_attachments"
                 if not os.path.exists(attachment_dir):
                     os.makedirs(attachment_dir)
                 
-                for index, link in enumerate(attachment_links, start=1):
-                    file_url = link.css('::attr(href)').get()
-                    if file_url:
-                        filename_text = link.css('::text').get('') or f"attachment_{index}"
-                        # 파일명에서 확장자 추출
-                        if '.' in filename_text:
-                            filename = clean_filename(filename_text)
-                        else:
-                            filename = clean_filename(f"attachment_{index}")
-                        
-                        download_url = response.urljoin(file_url) if not file_url.startswith('http') else file_url
-                        
-                        yield scrapy.Request(
-                            url=download_url,
-                            callback=self.save_attachment,
-                            dont_filter=True,
-                            meta={
-                                'attachment_dir': attachment_dir,
-                                'filename': filename,
-                                "playwright": True,
-                                "playwright_include_page": True,
-                            }
-                        )
+                for index, link in enumerate(js_download_links, start=1):
+                    href = link.css('::attr(href)').get()
+                    filename_text = link.css('::text').get('') or f"attachment_{index}"
+                    
+                    if href and 'file_download' in href:
+                        try:
+                            # JavaScript에서 다운로드 URL 추출
+                            # javascript:file_download('URL') 형태에서 URL 추출
+                            download_url_match = re.search(r"file_download\(['\"]([^'\"]+)['\"]\)", href)
+                            if download_url_match:
+                                download_url = download_url_match.group(1)
+                                
+                                # 파일명 정리
+                                if '.' in filename_text:
+                                    filename = clean_filename(filename_text)
+                                else:
+                                    filename = clean_filename(f"attachment_{index}")
+                                
+                                self.logger.info(f"Found attachment: {filename} (URL: {download_url})")
+                                
+                                # Playwright로 JavaScript 다운로드 실행
+                                download_success = await click_and_handle_download(
+                                    page, 
+                                    f"a[href*=\"{href.replace('javascript:', '')}\"]",
+                                    attachment_dir,
+                                    filename
+                                )
+                                
+                                if download_success:
+                                    self.logger.info(f"Successfully downloaded: {filename}")
+                                else:
+                                    self.logger.warning(f"Failed to download: {filename}")
+                        except Exception as e:
+                            self.logger.error(f"Error processing attachment {filename_text}: {e}")
         except Exception as e:
             self.logger.error(f"Error in parse_details for {number} - {title}: {e}")
         finally:
             if page and not page.is_closed():
                 await page.close()
 
-    async def save_attachment(self, response):
-        page = response.meta.get("playwright_page")
-        attachment_dir = response.meta.get('attachment_dir')
-        filename = response.meta.get('filename')
-        
-        try:
-            if response.body:
-                file_path = os.path.join(attachment_dir, filename)
-                with open(file_path, 'wb') as f:
-                    f.write(response.body)
-                self.logger.info(f"Saved attachment: {file_path}")
-            else:
-                self.logger.warning(f"Empty file content for: {filename}")
-        except Exception as e:
-            self.logger.error(f"Error saving attachment {filename}: {e}")
-        finally:
-            if page and not page.is_closed():
-                await page.close()
 
     async def errback(self, failure):
         page = failure.request.meta.get("playwright_page")

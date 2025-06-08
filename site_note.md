@@ -1,3 +1,4 @@
+buci        bucheoncci   타이틀 제목만 가져옴. 목록 리스트에서 클릭을 하면 응당코드는 200이지만 내용은 잘못된 주소라는 에러 페이지가 리턴됨. 아마도 자바스크립트에 값이 제대로 submit 되지 않는 걸로 보임.
 mss6   -  한번에 작동
 cceichungbuk.py   -  아마도 페이지 로드 후에 특정 element  를 다시 로드 하는 듯. 시작시 item_selector를 찾지 못함. 충북창조경제혁신센터인데 실제 홈페이지는 통합으로 되어 있어서 통합에서 전체를 다운받으면 각 지점의 것을 별도로 받을 필요 없어 보임.
 kidp   -   목록페이지에서 목록 클릭시 상세 페이지로 이동하지 않음.
@@ -8,7 +9,15 @@ snipBottom.py    -     form data 이용해서 post 로 리퀘스트 보내는 �
 itp.py               page 안에서 직접 playwright를 사용하는 샘플. 실제 작동은 안함.
 jejutp.py     vue 로 만들어진 dynimic page. 에러 해결 안됨.
 cbtp.py      base.py 상속 받는 방식으로 수정. 잘됨.
-gdtp.py       file download가 안됨. 만들어진 items 의 txt 내용도 엉망임.
+gdtp.py       file download가 안됨. 만들어진 items 의 txt 내용도 엉망임. base상속 방식이 아닌 자체 처리로 변경. 파일 다운로드를 자바스크립트 파싱으로 변경.
+innopolis       base.py 상속  잘됨.
+geri            base.py 상속  잘됨.
+cceiJeonnam       ccei는 안됨. vue 나 react인듯.
+kisa            1ok
+semas           안됨 자바스크립트 다이나믹. vue 나 react
+gcon            1ok
+ccei            selector를 못찾음.  ccei 전체가 한 사이트를 공유. 전체로 가져오면 되는 곳. 스크립트로 다이나믹 사이트. vue react.
+
 
 
 -----

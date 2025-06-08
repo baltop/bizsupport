@@ -20,7 +20,7 @@ class JejutpSpider(scrapy.Spider):
     max_pages = 2
     items_selector = "table.AW_bbs_table tbody tr"
 
-    item_title_selector = "table.AW_bbs_table tbody tr td.text-left a::text"
+    item_title_selector = "td.text-left a::text"
     click_selector = "table.AW_bbs_table tbody tr td.text-left a"
 
     details_page_main_content_selector = "div.board_area"
@@ -41,7 +41,10 @@ class JejutpSpider(scrapy.Spider):
             url=self.start_urls[0],
             meta={
                 "playwright": True,
-                "playwright_include_page": True
+                "playwright_include_page": True,
+                "playwright_page_methods": [
+                    PageMethod("wait_for_selector", self.click_selector),
+                ],
             })
 
     async def parse(self, response):
@@ -71,7 +74,10 @@ class JejutpSpider(scrapy.Spider):
                         "playwright_include_page": True,
                         "playwright_page_methods": [
                             PageMethod("click", title_selector),
-                            PageMethod("wait_for_load_state", "domcontentloaded"),
+                            PageMethod("wait_for_selector", self.details_page_main_content_selector),
+                            # div.py-3.border-top.border-bottom
+                            PageMethod("wait_for_selector", "div.py-3.border-top.border-bottom"),
+                            # PageMethod("wait_for_load_state", "domcontentloaded"),
                         ],
                         "errback": self.errback,
                         "number": number,
@@ -100,7 +106,10 @@ class JejutpSpider(scrapy.Spider):
                 callback=self.parse,
                 meta={
                 "playwright": True,
-                "playwright_include_page": True
+                "playwright_include_page": True,
+                "playwright_page_methods": [
+                    PageMethod("wait_for_selector", self.click_selector),
+                ],
             })
 
     async def parse_details(self, response):
@@ -142,11 +151,11 @@ class JejutpSpider(scrapy.Spider):
                     file_selector = f":nth-match({self.attachment_links_selector}, {index})"
 
                     if file_url:
-                        filename = link.css('::text').get('').strip()
+                        filename = link.css(' *::text').get('').strip()
                         filename = clean_filename(filename)
                         
                         yield scrapy.Request(
-                            url=current_url+"&carrot="+str(index),
+                            url=current_url,
                             callback=self.save_attachment,
                             dont_filter=True,
                             meta={

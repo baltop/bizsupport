@@ -84,12 +84,13 @@ class BuciSpider(scrapy.Spider):
 
                 # reqeust_url = "https://bucheoncci.korcham.net/front/board/boardContentsView.do?boardId=10135&menuId=410&contId=" + contNumber
                 yield Request(
-                    url= current_url + f"&carrot={number}",
+                    url= current_url,
                     meta={
                         "playwright": True,
                         "playwright_include_page": True,
                         "playwright_page_methods": [
                             PageMethod("click", title_selector),  # 클릭 이벤트
+                            PageMethod("wait_for_selector", self.details_page_main_content_selector),
                             PageMethod("wait_for_load_state", "domcontentloaded"),  # 페이지 로드 대기
                             # PageMethod("wait_for_selector", "div.contents_detail"),
                             # PageMethod("wait_for_timeout", 60000),  # 60초 대기
