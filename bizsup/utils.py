@@ -88,6 +88,32 @@ def clean_filename(filename: str) -> str:
         # return filename  # 확장자가 없으면 원래 문자열 반환
 
 
+def sanitize_filename(self, filename):
+    """파일명 정리"""
+    # URL 디코딩 (퍼센트 인코딩 제거)
+    from urllib.parse import unquote
+    filename = unquote(filename)
+    
+    # 특수문자 제거 (파일 시스템에서 허용하지 않는 문자)
+    filename = re.sub(r'[<>:"/\\|?*]', '_', filename)
+    
+    # 연속된 공백을 하나로
+    filename = re.sub(r'\s+', ' ', filename)
+    
+    # 너무 긴 파일명 제한
+    if len(filename) > 200:
+        # 확장자 보존
+        name_parts = filename.rsplit('.', 1)
+        if len(name_parts) == 2:
+            name, ext = name_parts
+            filename = name[:200-len(ext)-1] + '.' + ext
+        else:
+            filename = filename[:200]
+            
+    return filename
+
+
+
 def get_extension_from_content_type(content_type: str) -> str:
     """
     Get file extension from content type.
