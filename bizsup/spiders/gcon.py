@@ -10,9 +10,9 @@ class GconSpider(BaseSpider):
     output_dir = 'output/gcon'
     page_count = 0
     max_pages = 2
-    items_selector = "table tbody tr"
-    item_title_selector = "td.title a::text"
-    click_selector = "td.title a"
+    items_selector = "table tbody tr td.title a"
+    # item_title_selector = "td.title a::text"
+    # click_selector = "td.title a"
     details_page_main_content_selector = "div#content"
     attachment_links_selector = "div.file-list__set__item a"
     next_page_url = "https://www.gcon.or.kr/gcon/business/gconNotice/list.do?menuNo=200061&pageIndex={next_page}"

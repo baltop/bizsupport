@@ -5,6 +5,9 @@ import os
 import re
 import asyncio
 import time
+import json
+import hashlib
+from datetime import datetime
 from urllib.parse import urlparse, urlunparse
 from bizsup.utils import clean_filename, click_and_handle_download, create_output_directory
 
@@ -33,6 +36,96 @@ class BaseSpider(scrapy.Spider):
     def __init__(self, *args, **kwargs):
         super(BaseSpider, self).__init__(*args, **kwargs)
         create_output_directory(self.output_dir)
+        
+        # 중복 체크 관련
+        self.processed_titles_file = f"{self.output_dir}/processed_titles.json"
+        self.processed_titles = set()
+        self.enable_duplicate_check = True
+        self.duplicate_threshold = 3  # 동일 제목 3개 발견시 조기 종료
+        self.consecutive_duplicates = 0  # 연속 중복 카운터
+        
+        # 처리된 제목 목록 로드
+        self.load_processed_titles()
+    
+    def normalize_title(self, title: str) -> str:
+        """제목 정규화 - 중복 체크용"""
+        if not title:
+            return ""
+        
+        # 앞뒤 공백 제거
+        normalized = title.strip()
+        
+        # 연속된 공백을 하나로
+        normalized = re.sub(r'\s+', ' ', normalized)
+        
+        # 특수문자 제거 (일부 허용)
+        normalized = re.sub(r'[^\w\s가-힣()-]', '', normalized)
+        
+        # 소문자 변환 (영문의 경우)
+        normalized = normalized.lower()
+        
+        return normalized
+    
+    def get_title_hash(self, title: str) -> str:
+        """제목의 해시값 생성"""
+        normalized = self.normalize_title(title)
+        return hashlib.md5(normalized.encode('utf-8')).hexdigest()
+    
+    def load_processed_titles(self):
+        """처리된 제목 목록 로드"""
+        if not self.enable_duplicate_check:
+            return
+        
+        try:
+            if os.path.exists(self.processed_titles_file):
+                with open(self.processed_titles_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    # 제목 해시만 로드
+                    self.processed_titles = set(data.get('title_hashes', []))
+                    self.logger.info(f"기존 처리된 공고 {len(self.processed_titles)}개 로드")
+            else:
+                self.processed_titles = set()
+                self.logger.info("새로운 처리된 제목 파일 생성")
+        except Exception as e:
+            self.logger.error(f"처리된 제목 로드 실패: {e}")
+            self.processed_titles = set()
+    
+    def save_processed_titles(self):
+        """처리된 제목 목록 저장"""
+        if not self.enable_duplicate_check or not self.processed_titles_file:
+            return
+        
+        try:
+            os.makedirs(os.path.dirname(self.processed_titles_file), exist_ok=True)
+            
+            data = {
+                'title_hashes': list(self.processed_titles),
+                'last_updated': datetime.now().isoformat(),
+                'total_count': len(self.processed_titles)
+            }
+            
+            with open(self.processed_titles_file, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+                
+            self.logger.info(f"처리된 제목 {len(self.processed_titles)}개 저장 완료")
+        except Exception as e:
+            self.logger.error(f"처리된 제목 저장 실패: {e}")
+    
+    def is_title_processed(self, title: str) -> bool:
+        """제목이 이미 처리되었는지 확인"""
+        if not self.enable_duplicate_check:
+            return False
+        
+        title_hash = self.get_title_hash(title)
+        return title_hash in self.processed_titles
+    
+    def add_processed_title(self, title: str):
+        """처리된 제목 추가"""
+        if not self.enable_duplicate_check:
+            return
+        
+        title_hash = self.get_title_hash(title)
+        self.processed_titles.add(title_hash)
 
 
     async def start(self):
@@ -56,41 +149,51 @@ class BaseSpider(scrapy.Spider):
 
             for index, item in enumerate(items, start=1):
                 await asyncio.sleep(3)
-                number = ''
+                # number = ''
 
                 # 대부분 items는 table tag 아래 있음. 가끔 div ul 로 된 사이트도 있음.
-                if ' tr ' in self.items_selector:
-                    # items_selector를 tr 까지만 남기고 나머지는 지워버림
-                    base_str = self.items_selector.split('tr')[0]
-                    num_selector = f"{base_str} tr:nth-of-type({index}) td:nth-child(1) *::text"
-                    number = response.css(num_selector).get('').strip()
-                if not number:
-                    number = str(int(time.time()))
+                # if ' tr ' in self.items_selector:
+                #     # items_selector를 tr 까지만 남기고 나머지는 지워버림
+                #     base_str = self.items_selector.split('tr')[0]
+                #     num_selector = f"{base_str} tr:nth-of-type({index}) td:nth-child(1) *::text"
+                #     number = response.css(num_selector).get('').strip()
+                # if not number:
+                #     number = str(int(time.time()))
 
-                title_selector = f"{self.items_selector} *::text"
-                title = response.css(f"{title_selector}").getall()[index].strip()
+                # 각 아이템에서 개별적으로 제목 추출
+                # 먼저 일반적인 링크 텍스트 시도
+                # op_sel = response.css(f":nth-match({self.items_selector}, {index} )")
+                title = item.css(" *::text").get('').strip()
+
+                if not title:
+                    # 마지막으로 모든 텍스트에서 첫 번째 추출
+                    title = response.css(f"{self.items_selector} *::text").getall().strip()
+                    
+                self.logger.info(f"Title: {title}")
+                
                 yield Request(
                     url=current_url,
                     meta={
                         "playwright": True,
                         "playwright_include_page": True,
                         "playwright_page_methods": [
-                            PageMethod("click", self.items_selector),
+                            PageMethod("click", f":nth-match({self.items_selector}, {index})"),
                             PageMethod("wait_for_selector", self.details_page_main_content_selector),
                             PageMethod("wait_for_load_state", "domcontentloaded"),
                         ],
                         "errback": self.errback,
-                        "number": number,
                         "title": title,
                     },
                     callback=self.parse_details,
                     dont_filter=True,
                 )
         except Exception as e:
-            self.logger.error("parse" + number + " " + title)
+
             self.logger.error(f"Error occurred: {e}")
+            
             self.logger.error(f"Response URL: {response.url}")
             self.logger.error(f"Meta data: {response.meta}")
+            self.logger.error("parse " + title)
         finally:
             if page and not page.is_closed():
                 await page.close()
@@ -112,11 +215,21 @@ class BaseSpider(scrapy.Spider):
     async def parse_details(self, response):
         try:
             page = response.meta["playwright_page"]
-            number = response.meta.get('number', '')
+            
             title = response.meta.get('title', '')
-            self.logger.info(f"Number: {number}, Title: {title}")
+            
+            # 처리된 제목으로 추가
+            self.add_processed_title(title)
             main_content = response.css(self.details_page_main_content_selector).get('').strip()
             cleaned_content = re.sub(r'<[^>]+>', ' ', main_content).strip() if main_content else ''
+            # Create folder based on announcement title
+            title_folder_name = clean_filename(title) 
+            title_folder_path = f"{self.output_dir}/{title_folder_name}"
+            
+            # Create title folder if it doesn't exist
+            if not os.path.exists(title_folder_path):
+                os.makedirs(title_folder_path)
+            
             markdown_content = f"""# {title}
 
 ## 공고 내용
@@ -126,7 +239,7 @@ class BaseSpider(scrapy.Spider):
 URL: {response.url}
 작성일: {time.strftime('%Y-%m-%d %H:%M:%S')}
 """
-            md_filename = f"{self.output_dir}/{number}.md"
+            md_filename = f"{title_folder_path}/content.md"
             with open(md_filename, 'w', encoding='utf-8') as f:
                 f.write(markdown_content)
             current_url = response.url
@@ -135,7 +248,7 @@ URL: {response.url}
             self.logger.info(f"url_without_params: +++++++++++++++++++++++++++++++++++++ {url_without_params}")
             attachment_links = response.css(self.attachment_links_selector)
             if attachment_links:
-                attachment_dir = f"{self.output_dir}/{number}"
+                attachment_dir = f"{title_folder_path}/attachments"
                 if not os.path.exists(attachment_dir):
                     os.makedirs(attachment_dir)
                 if isinstance(attachment_links, scrapy.selector.Selector):
@@ -167,7 +280,7 @@ URL: {response.url}
                             }
                         )
         except Exception as e:
-            self.logger.error("parse_details" + number + " " + title)
+            self.logger.error("parse_details " + title)
             self.logger.error(f"Error occurred: {e}")
         finally:
             if page and not page.is_closed():
