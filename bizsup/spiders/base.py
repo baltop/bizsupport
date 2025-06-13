@@ -41,7 +41,7 @@ class BaseSpider(scrapy.Spider):
         self.processed_titles_file = f"{self.output_dir}/processed_titles.json"
         self.processed_titles = set()
         self.enable_duplicate_check = True
-        self.duplicate_threshold = 3  # 동일 제목 3개 발견시 조기 종료
+        self.duplicate_threshold = 2  # 동일 제목 2개 발견시 조기 종료
         self.consecutive_duplicates = 0  # 연속 중복 카운터
         
         # 처리된 제목 목록 로드
@@ -126,6 +126,23 @@ class BaseSpider(scrapy.Spider):
         
         title_hash = self.get_title_hash(title)
         self.processed_titles.add(title_hash)
+    
+    def check_consecutive_duplicates(self, title: str) -> bool:
+        """연속된 중복 타이틀을 체크하고 중지 여부를 결정"""
+        # 이미 처리된 제목인지 확인
+        if self.is_title_processed(title):
+            self.consecutive_duplicates += 1
+            self.logger.info(f"중복 제목 발견 ({self.consecutive_duplicates}/{self.duplicate_threshold}): '{title}'")
+            
+            # 중복 임계값에 도달했는지 확인
+            if self.consecutive_duplicates >= self.duplicate_threshold:
+                self.logger.info(f"연속된 중복 제목 {self.duplicate_threshold}개 발견 - 스파이더 중지")
+                return True
+        else:
+            # 새로운 제목이면 카운터 리셋
+            self.consecutive_duplicates = 0
+        
+        return False
 
 
     async def start(self):
@@ -170,6 +187,16 @@ class BaseSpider(scrapy.Spider):
                     title = response.css(f"{self.items_selector} *::text").getall().strip()
                     
                 self.logger.info(f"Title: {title}")
+                
+                # 연속된 중복 타이틀 체크
+                if self.check_consecutive_duplicates(title):
+                    self.logger.info("연속된 중복 타이틀로 인해 스파이더를 중지합니다.")
+                    return
+                
+                # 이미 처리된 제목은 건너뛰기
+                if self.is_title_processed(title):
+                    self.logger.info(f"이미 처리된 제목 건너뛰기: {title}")
+                    continue
                 
                 yield Request(
                     url=current_url,
@@ -304,3 +331,8 @@ URL: {response.url}
         self.logger.error(f"Error: {failure.value}")
         self.logger.error(f"Meta data: {failure.request.meta}")
         await page.close()
+    
+    def closed(self, reason):
+        """스파이더 종료 시 처리된 제목 저장"""
+        self.save_processed_titles()
+        self.logger.info(f"스파이더 종료: {reason}")
