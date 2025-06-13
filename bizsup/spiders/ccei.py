@@ -10,9 +10,9 @@ class CceiSpider(BaseSpider):
     output_dir = 'output/ccei'
     page_count = 0
     max_pages = 2
-    items_selector = "table.tb03 tbody tr"
-    item_title_selector = "td.tb_title a::text"
-    click_selector = "table.tb03 tbody tr td.tb_title a"
+    items_selector = "table.tb03 tbody tr  td.tb_title a"
+    # item_title_selector = "td.tb_title a::text"
+    # click_selector = "table.tb03 tbody tr td.tb_title a"
     details_page_main_content_selector = "div.brd_area"
     attachment_links_selector = "div.vw_download a"
     next_page_url = "https://ccei.creativekorea.or.kr/service/business_list.do&page={next_page}"

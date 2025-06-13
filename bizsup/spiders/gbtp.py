@@ -20,7 +20,7 @@ class GbtpSpider(scrapy.Spider):
     allowed_domains = ['gbtp.or.kr']
     start_urls = ['https://www.gbtp.or.kr/user/board.do?bbsId=BBSMSTR_000000000021']
     base_url = 'https://gbtp.or.kr'
-    output_dir = 'output/gbtp_output'
+    output_dir = 'output/gbtp'
     page_count = 0
     max_pages = 4
     custom_settings = {

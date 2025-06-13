@@ -10,10 +10,10 @@ class CbtpSpider(BaseSpider):
     output_dir = 'output/cbtp'
     page_count = 0
     max_pages = 2
-    items_selector = "table.bbs_default_list tbody tr"
+    items_selector = "table.bbs_default_list tbody tr td.subject a"
 
-    item_title_selector = "table.bbs_default_list tbody tr td.subject a::text"
-    click_selector = "table.bbs_default_list tbody tr td.subject a"
+    # item_title_selector = "table.bbs_default_list tbody tr td.subject a::text"
+    # click_selector = "table.bbs_default_list tbody tr td.subject a"
 
     details_page_main_content_selector = "div.sub_contents"
     attachment_links_selector = "ul.attach.clearfix li a"

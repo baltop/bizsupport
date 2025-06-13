@@ -10,9 +10,9 @@ class KisaSpider(BaseSpider):
     output_dir = 'output/kisa'
     page_count = 0
     max_pages = 2
-    items_selector = "table.notice tbody tr"
-    item_title_selector = " td.sbj a::text"
-    click_selector = "table.notice tbody tr td.sbj a"
+    items_selector = "table.notice tbody tr  td.sbj a"
+    # item_title_selector = " td.sbj a::text"
+    # click_selector = "table.notice tbody tr td.sbj a"
     details_page_main_content_selector = "section.lb_con"
     attachment_links_selector = "ul li.file a[href='#fnPostAttachDownload']"
     next_page_url = "https://www.kisa.or.kr/401?page={next_page}&searchDiv=10&searchWord="

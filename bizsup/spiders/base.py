@@ -180,11 +180,19 @@ class BaseSpider(scrapy.Spider):
                 # 각 아이템에서 개별적으로 제목 추출
                 # 먼저 일반적인 링크 텍스트 시도
                 # op_sel = response.css(f":nth-match({self.items_selector}, {index} )")
-                title = item.css(" *::text").get('').strip()
-
+                title = item.css(" *::text").getall()
+                # title = ' '.join(title_list).strip() if title_list else ''
+                
+                
+                
                 if not title:
                     # 마지막으로 모든 텍스트에서 첫 번째 추출
                     title = response.css(f"{self.items_selector} *::text").getall().strip()
+                    
+                if type(title) == list:
+                    title = ' '.join(title).strip()
+                else:
+                    title = title.strip()
                     
                 self.logger.info(f"Title: {title}")
                 

@@ -17,7 +17,7 @@ class SeoultpSpider(scrapy.Spider):
         self.page_count = 0
         self.max_pages = 5
         # Create output directory
-        self.output_dir = "seoultp_output"
+        self.output_dir = "output/seoultp"
         os.makedirs(self.output_dir, exist_ok=True)
     
     def start_requests(self):

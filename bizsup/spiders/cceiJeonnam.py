@@ -10,9 +10,9 @@ class CceiJeonnamSpider(BaseSpider):
     output_dir = 'output/cceiJeonnam'
     page_count = 0
     max_pages = 2
-    items_selector = "table.tbl1 tbody tr"
-    item_title_selector = "td:nth-child(3) a.tb_title::text"
-    click_selector = "table.tbl1 tbody tr td:nth-child(3) a.tb_title"
+    items_selector = "table.tbl1 tbody tr td:nth-child(3) a.tb_title"
+    # item_title_selector = "td:nth-child(3) a.tb_title::text"
+    # click_selector = "table.tbl1 tbody tr td:nth-child(3) a.tb_title"
     details_page_main_content_selector = "div.contentswrapper"
     attachment_links_selector = "div.vw_download a"
     next_page_url = "https://ccei.creativekorea.or.kr/jeonnam/custom/notice_list.do?&page={next_page}"

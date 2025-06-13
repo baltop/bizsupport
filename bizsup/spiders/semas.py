@@ -10,9 +10,9 @@ class SemasSpider(BaseSpider):
     output_dir = 'output/semas'
     page_count = 0
     max_pages = 2
-    items_selector = "a.aconbox"
-    item_title_selector = "ul li.tit div.cut_text1::text"
-    click_selector = "a.aconbox"
+    items_selector = "a.aconbox ul li.tit div.cut_text1"
+    # item_title_selector = "ul li.tit div.cut_text1::text"
+    # click_selector = "a.aconbox"
     details_page_main_content_selector = "div.u-page.cont-max"
     attachment_links_selector = "div.file-group div button.q-btn.q-btn-item.non-selectable.no-outline.q-btn--standard.q-btn--rectangle"
     next_page_url = "https://www.semas.or.kr/web/board/webBoardList.kmdc?bCd=2001&pNm=BOA0121&page={next_page}"
