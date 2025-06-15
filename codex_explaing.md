@@ -5,7 +5,7 @@
     1. Top-level files
        - scrapy.cfg — Scrapy project config (points to bizsup.settings)
        - server_full.csv — Master list of sites to crawl (columns: site code, name, start URL, API flag)
-       - btp_output/… — Output folder populated by the `btp` spider (Markdown files + any attachments)
+       - output/{sitecode} — Output folder populated by the `btp` spider (Markdown files + any attachments)
        - *.md, *.html, download_links.txt, etc. — Misc. sample pages, extracted links, chat-log artifacts
 
     2. The Scrapy project “bizsup”
@@ -25,13 +25,13 @@
        - Pagination up to a hard cap (usually 3 pages)
        - For each notice → `parse_detail()`
            * Extract the HTML content, “clean” it to Markdown (strip tags, preserve breaks)
-           * Write `OUTPUT_DIR/<notice_id>.md`
+           * Write `OUTPUT_DIR/{title}/content.md`
            * Find attachment links, then yield requests to `save_attachment()`
        - `save_attachment()` → handles Korean filenames (via `unquote`), infers extension from Content-Type, writes
     bytes to disk
 
     4. Outputs & artifacts
-       - Each spider writes into its own `OUTPUT_DIR` (e.g. `btp_output/…`)
+       - Each spider writes into its own `OUTPUT_DIR` (e.g. `output/{sitecode}`)
        - The repo already contains the `btp_output` dump from a run of the `btp` spider
        - There are also sample HTML snapshots (e.g. itp_page.html) and link dumps to aid debugging
 
