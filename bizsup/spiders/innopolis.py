@@ -8,8 +8,9 @@ class InnopolisSpider(BaseSpider):
     start_urls = ['https://www.innopolis.or.kr/newBusiness?menuId=MENU01028']
     base_url = 'https://www.innopolis.or.kr'
     output_dir = 'output/innopolis'
-    page_count = 0
-    max_pages = 3
+    # base.py 상속받음.
+    # page_count = 0
+    # max_pages = 3
     # div#business-city1-1 ul li a
     items_selector = "div#business-city1-1 ul li  div div strong.title"
     # item_title_selector = "div#business-city1-1 ul li div div strong.title::text"

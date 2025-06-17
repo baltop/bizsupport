@@ -42,8 +42,9 @@ class KidpSpider(BaseSpider):
     start_urls = ['https://kidp.or.kr/?menuno=1202']
     base_url = 'https://kidp.or.kr'
     output_dir = 'output/kidp'
-    page_count = 0
-    max_pages = 2
+    # base.py 상속받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.board01-list tbody tr td.left a"
 
 

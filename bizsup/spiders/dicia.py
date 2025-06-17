@@ -17,8 +17,9 @@ class DiciaSpider(BaseSpider):
     start_urls = ['https://www.dicia.or.kr/sub.do?menuIdx=MENU_000000000000055']
     base_url = 'https://dicia.or.kr'
     output_dir = 'output/dicia'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속 받음.    
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.board.table tbody tr td.bd-tit a"
     # item_num_selector = "td:nth-child(1)::text"
 

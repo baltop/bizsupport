@@ -8,8 +8,7 @@ class CceiJeonnamSpider(BaseSpider):
     start_urls = ['https://ccei.creativekorea.or.kr/jeonnam/custom/notice_list.do?']
     base_url = 'https://ccei.creativekorea.or.kr'
     output_dir = 'output/cceiJeonnam'
-    page_count = 0
-    max_pages = 2
+
     items_selector = "table.tbl1 tbody tr td:nth-child(3) a.tb_title"
     # item_title_selector = "td:nth-child(3) a.tb_title::text"
     # click_selector = "table.tbl1 tbody tr td:nth-child(3) a.tb_title"

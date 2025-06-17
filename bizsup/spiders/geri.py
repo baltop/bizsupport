@@ -8,8 +8,9 @@ class GeriSpider(BaseSpider):
     start_urls = ['https://geri.re.kr/html/board_list.asp?board_id=business']
     base_url = 'https://geri.re.kr'
     output_dir = 'output/geri'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속 받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "div.notice_box ul li a span.t2 span.txt"
     # item_title_selector = "a span.t2 span.txt::text"
     # click_selector = "div.notice_box ul li a"

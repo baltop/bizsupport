@@ -19,7 +19,7 @@ class BaseSpider(scrapy.Spider):
     output_dir = 'output/gbsa'
 
     page_count = 0
-    max_pages = 2
+    max_pages = 4 
     
     items_selector = "table.bbs-list tbody tr"
 
@@ -39,7 +39,8 @@ class BaseSpider(scrapy.Spider):
         
         # 중복 체크 관련
         self.processed_titles_file = f"{self.output_dir}/processed_titles.json"
-        self.processed_titles = set()
+        self.processed_titles = set()  # 이전 세션에서 처리된 제목들
+        self.current_session_titles = set()  # 현재 세션에서 처리된 제목들
         self.enable_duplicate_check = True
         self.duplicate_threshold = 2  # 동일 제목 2개 발견시 조기 종료
         self.consecutive_duplicates = 0  # 연속 중복 카운터
@@ -98,16 +99,19 @@ class BaseSpider(scrapy.Spider):
         try:
             os.makedirs(os.path.dirname(self.processed_titles_file), exist_ok=True)
             
+            # 이전 세션과 현재 세션의 제목을 합침
+            all_processed_titles = self.processed_titles.union(self.current_session_titles)
+            
             data = {
-                'title_hashes': list(self.processed_titles),
+                'title_hashes': list(all_processed_titles),
                 'last_updated': datetime.now().isoformat(),
-                'total_count': len(self.processed_titles)
+                'total_count': len(all_processed_titles)
             }
             
             with open(self.processed_titles_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
                 
-            self.logger.info(f"처리된 제목 {len(self.processed_titles)}개 저장 완료")
+            self.logger.info(f"처리된 제목 {len(all_processed_titles)}개 저장 완료")
         except Exception as e:
             self.logger.error(f"처리된 제목 저장 실패: {e}")
     
@@ -125,7 +129,7 @@ class BaseSpider(scrapy.Spider):
             return
         
         title_hash = self.get_title_hash(title)
-        self.processed_titles.add(title_hash)
+        self.current_session_titles.add(title_hash)
     
     def check_consecutive_duplicates(self, title: str) -> bool:
         """연속된 중복 타이틀을 체크하고 중지 여부를 결정"""

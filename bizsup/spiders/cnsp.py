@@ -17,8 +17,9 @@ class CnspSpider(BaseSpider):
     start_urls = ['https://www.cnsp.or.kr/project/list.do']
     base_url = 'https://cnsp.or.kr'
     output_dir = 'output/cnsp'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속 받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.w-100.tableProject tbody tr td.text-left div a"
     # item_num_selector = "td:nth-child(1)::text"
 

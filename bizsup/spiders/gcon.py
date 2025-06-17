@@ -8,8 +8,9 @@ class GconSpider(BaseSpider):
     start_urls = ['https://www.gcon.or.kr/gcon/business/gconNotice/list.do?menuNo=200061']
     base_url = 'https://www.gcon.or.kr'
     output_dir = 'output/gcon'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속 받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table tbody tr td.title a"
     # item_title_selector = "td.title a::text"
     # click_selector = "td.title a"

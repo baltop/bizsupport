@@ -17,8 +17,9 @@ class SjtpSpider(BaseSpider):
     start_urls = ['https://sjtp.or.kr/bbs/board.php?bo_table=business01']
     base_url = 'https://sjtp.or.kr'
     output_dir = 'output/sjtp'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속받은 속성들
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table tbody tr td.td_subject ul.bo_title li:nth-child(1) p a"
     # item_num_selector = "td.td_num2"
     # item_title_selector = "td.td_subject ul.bo_title li:nth-child(1) p a::text"

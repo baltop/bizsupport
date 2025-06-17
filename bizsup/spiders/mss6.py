@@ -17,8 +17,9 @@ class Mss6Spider(BaseSpider):
     start_urls = ['https://www.mss.go.kr/site/incheon/ex/bbs/List.do?cbIdx=246']
     base_url = 'https://mss.go.kr'
     output_dir = 'output/mss6'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속함.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "div.board_list table tbody tr td.subject a"
 
 

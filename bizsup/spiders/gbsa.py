@@ -8,8 +8,9 @@ class GbsaSpider(BaseSpider):
     start_urls = ['https://www.gbsa.or.kr/board/notice.do']
     base_url = 'https://gbsa.or.kr'
     output_dir = 'output/gbsa'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속 받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.bbs-list tbody tr td.align_left a"
 
     details_page_main_content_selector = "div#content"

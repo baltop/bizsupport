@@ -8,8 +8,9 @@ class KisaSpider(BaseSpider):
     start_urls = ['https://www.kisa.or.kr/401']
     base_url = 'https://www.kisa.or.kr'
     output_dir = 'output/kisa'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속함.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.notice tbody tr  td.sbj a"
     # item_title_selector = " td.sbj a::text"
     # click_selector = "table.notice tbody tr td.sbj a"

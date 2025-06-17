@@ -8,8 +8,9 @@ class CbtpSpider(BaseSpider):
     start_urls = ['https://www.cbtp.or.kr/index.php?control=bbs&board_id=saup_notice&lm_uid=387']
     base_url = 'https://www.cbtp.or.kr'
     output_dir = 'output/cbtp'
-    page_count = 0
-    max_pages = 2
+    # base.py dptj 에서 상속 받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.bbs_default_list tbody tr td.subject a"
 
     # item_title_selector = "table.bbs_default_list tbody tr td.subject a::text"

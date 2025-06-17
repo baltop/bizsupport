@@ -23,8 +23,7 @@ class BuciSpider(BaseSpider):
     start_urls = ['https://bucheoncci.korcham.net/front/board/boardContentsListPage.do?boardId=10135&menuId=410']
     base_url = 'https://bucheoncci.korcham.net'
     output_dir = 'output/buci'
-    page_count = 0
-    max_pages = 3
+
     items_selector = "div.boardlist table tbody tr td.title.c_title a"
 
 

@@ -17,8 +17,9 @@ class JejutpSpider(BaseSpider):
     start_urls = ['https://www.jejutp.or.kr/board/business']
     base_url = 'https://www.jejutp.or.kr'
     output_dir = 'output/jejutp'
-    page_count = 0
-    max_pages = 2
+    # base.py 상속받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.AW_bbs_table tbody tr  td.text-left a"
 
     # item_title_selector = "td.text-left a::text"

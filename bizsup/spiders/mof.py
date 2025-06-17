@@ -17,8 +17,9 @@ class MofSpider(BaseSpider):
     start_urls = ['https://www.mof.go.kr/doc/ko/selectDocList.do?paginationInfo.currentPageNo=1&listUpdtDt=2025-04-07++10%3A00&menuSeq=375&bbsSeq=9']
     base_url = 'https://mof.go.kr'
     output_dir = 'output/mof'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속함.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.bod-table-list tbody tr td.tit a"
     # item_num_selector = "td:nth-child(1)::text"
 

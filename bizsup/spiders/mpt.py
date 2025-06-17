@@ -16,8 +16,9 @@ class MptSpider(BaseSpider):
     start_urls = ['https://itp.or.kr/intro.asp?tmid=13']
     base_url = 'https://www.itp.or.kr'
     output_dir = 'output/mtp'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속함.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.list.fixed tbody tr td.subject a"
     # click_selector = "table.list.fixed tbody tr  td.subject a"
     

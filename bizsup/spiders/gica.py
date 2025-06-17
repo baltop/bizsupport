@@ -17,8 +17,9 @@ class GicaSpider(BaseSpider):
     start_urls = ['https://www.gica.or.kr/Home/H40000/H40100/boardList?page=1']
     base_url = 'https://gica.or.kr'
     output_dir = 'output/gica'
-    page_count = 0
-    max_pages = 2
+    # base.py 에서 상속 받음.
+    # page_count = 0
+    # max_pages = 2
     items_selector = "table.table_bbs tbody tr td.subject a"
     # item_num_selector = "td:nth-child(1)::text"
 
