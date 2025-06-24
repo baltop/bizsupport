@@ -217,7 +217,7 @@ class BaseSpider(scrapy.Spider):
                         "playwright_include_page": True,
                         "playwright_page_methods": [
                             PageMethod("click", f":nth-match({self.items_selector}, {index})"),
-                            PageMethod("wait_for_selector", self.details_page_main_content_selector),
+                            PageMethod("wait_for_selector", self.details_page_main_content_selector, timeout=180000),
                             PageMethod("wait_for_load_state", "domcontentloaded"),
                         ],
                         "errback": self.errback,

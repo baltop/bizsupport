@@ -42,6 +42,17 @@ snipBottom.py    -     form data 이용해서 post 로 리퀘스트 보내는 �
           
 
 
+https://hamancci.korcham.net/front/board/boardContentsListPage.do?boardId=10521&menuId=10057
+
+hamancci        상공회의소 계열 함안 상공회의소.    ajax로 페이지 가져오는데  scrapy-playwright에서 
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.wait_for_selector: Timeout 180000ms exceeded.
+Call log:
+  - waiting for locator("div#contentsarea") to be visible
+
+에러 발생함.
+
+
 
 
 
